@@ -82,6 +82,38 @@ Define tests for the 22 change scenarios, in addition to the 3 given as examples
 14) [A] -> remove(A) -> []
 15) [A] -> remove(0) -> []
 16) [A] -> set(0,B) -> [B]
+  Tests:
+    addToFront(X) throws no Exceptions
+    addToRear(X) throws no Exceptions
+    addAfter(X, B) throws no Exceptions 
+    addAfter(X, Z) throws NoSuchElementException
+    add(X) throws no Exception
+    add(-1, X) throws IndexOutOfBoundsException
+    add(0, X) throws no Exception
+    add(1, X) throws no Exception
+    add(2, X) throws IndexOutOfBoundsException
+    removeFirst() returns B
+    removeLast() returns B
+    remove(B) returns B
+    remove(X) throws NoSuchElementException
+    remove(-1) throws IndexOutOfBoundsException
+    remove(0) returns B
+    remove(1) throws IndexOutOfBoundsException
+    set(-1, X) throws IndexOutOfBoundsException
+    set(0, X) throws no Exception
+    set(1, X) throws IndexOutOfBoundsException
+    get(-1) throws IndexOutOfBoundsException
+    get(0) returns B
+    get(1) throws IndexOutOfBoundsException
+    indexOf(B) returns 0
+    indexOf(X) returns -1
+    first() returns B
+    last() returns B
+    contains(B) returns true
+    contains(X) returns false
+    isEmpty() returns false
+    size() returns 1
+    toString() returns "[B]"
 17) [A,B] -> addToFront(C) -> [C,A,B]
   Tests:
     addToFront(X) throws no Exceptions
