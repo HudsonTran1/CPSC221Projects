@@ -28,6 +28,7 @@ Define tests for the 22 change scenarios, in addition to the 3 given as examples
     size() returns 0
     toString returns "[]"
 2) [] -> addToFront(A) -> [A]
+  Tests:
     addToFront(X) throws no Exceptions
     addToRear(X) throws no Exceptions
     addAfter(X, A) throws no Exceptions 
@@ -60,6 +61,7 @@ Define tests for the 22 change scenarios, in addition to the 3 given as examples
     size() returns 1
     toString() returns "[A]"
 3) [] -> addToRear(A) -> [A]
+  Tests:
     addToFront(X) throws no Exceptions
     addToRear(X) throws no Exceptions
     addAfter(X, A) throws no Exceptions 
@@ -92,6 +94,7 @@ Define tests for the 22 change scenarios, in addition to the 3 given as examples
     size() returns 1
     toString() returns "[A]"
 4) [] -> add(A) -> [A]
+  Tests:
     addToFront(X) throws no Exceptions
     addToRear(X) throws no Exceptions
     addAfter(X, A) throws no Exceptions 
@@ -124,6 +127,7 @@ Define tests for the 22 change scenarios, in addition to the 3 given as examples
     size() returns 1
     toString() returns "[A]"
 5) [] -> add(0,A) -> [A]
+  Tests:
     addToFront(X) throws no Exceptions
     addToRear(X) throws no Exceptions
     addAfter(X, A) throws no Exceptions 
@@ -282,6 +286,7 @@ Define tests for the 22 change scenarios, in addition to the 3 given as examples
       toString() returns "[B, A]"
 11) [A] -> add(1,B) -> [A,B]
 12) [A] -> removeFirst() -> []
+  Tests:
     addToFront(X) throws no Exception
     addToRear(X) throws no Exception
     addAfter(X, Z) throws NoSuchElementException
@@ -306,6 +311,7 @@ Define tests for the 22 change scenarios, in addition to the 3 given as examples
     size() returns 0
     toString returns "[]"
 13) [A] -> removeLast() -> []
+  Tests:
     addToFront(X) throws no Exception
     addToRear(X) throws no Exception
     addAfter(X, Z) throws NoSuchElementException
@@ -330,6 +336,7 @@ Define tests for the 22 change scenarios, in addition to the 3 given as examples
     size() returns 0
     toString returns "[]"
 14) [A] -> remove(A) -> []
+  Tests:
     addToFront(X) throws no Exception
     addToRear(X) throws no Exception
     addAfter(X, Z) throws NoSuchElementException
@@ -354,6 +361,7 @@ Define tests for the 22 change scenarios, in addition to the 3 given as examples
     size() returns 0
     toString returns "[]"
 15) [A] -> remove(0) -> []
+  Tests:
     addToFront(X) throws no Exception
     addToRear(X) throws no Exception
     addAfter(X, Z) throws NoSuchElementException
