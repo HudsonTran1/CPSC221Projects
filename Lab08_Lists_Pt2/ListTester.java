@@ -170,9 +170,9 @@ public class ListTester {
 		testEmptyList(newList, "newList");
 
 		//empty to 1-element list
-			// Scenario: 02
+			// Scenario: 02 #6
 		testSingleElementList(emptyList_addToFrontA_A, "emptyList_addToFrontA_A", LIST_A, STRING_A);
-			// Scenario: 03
+			// Scenario: 03 #6
 
 			// Scenario: 04
 
@@ -180,11 +180,11 @@ public class ListTester {
 
 			
 		//1-element to empty list
-			// Scenario: 12
+			// Scenario: 12 #5
 
 			// Scenario: 13
 
-			// Scenario: 14
+			// Scenario: 14 #5
 
 			// Scenario: 15
 
@@ -194,9 +194,9 @@ public class ListTester {
 		//1-element to 2-element
 			// Scenario: 06
 		testTwoElementList(A_addToFrontB_BA, "A_addToFrontB_BA", LIST_BA, STRING_BA);
-			// Scenario: 07
+			// Scenario: 07 #7
 
-			// Scenario: 10
+			// Scenario: 10 #8
 
 			
 		//1-element to changed 1-element via set()
@@ -210,7 +210,7 @@ public class ListTester {
 		//2-element to 1-element
 			// Scenario: 25
 
-			// Scenario: 26
+			// Scenario: 26 #9
 
 			// Scenario: 27
 
@@ -360,7 +360,7 @@ public class ListTester {
 	 * @return [B,A] after add(0,B)
 	 */
 
-	/** Scenario #12: [A] -> removeFirst() -> []
+	/** Scenario #12: [A] -> removeFirst() -> [] #5
 	 * @return [] after removeFirst()
 	 */
 
@@ -368,7 +368,7 @@ public class ListTester {
 	 * @return [] after removeLast()
 	 */
 
-	/** Scenario #14: [A] -> remove(A) -> []
+	/** Scenario #14: [A] -> remove(A) -> [] #5
 	 * @return [] after remove(A)
 	 */
 
