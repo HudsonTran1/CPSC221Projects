@@ -173,6 +173,7 @@ public class ListTester {
 			// Scenario: 02 #6
 		testSingleElementList(emptyList_addToFrontA_A, "emptyList_addToFrontA_A", LIST_A, STRING_A);
 			// Scenario: 03 #6
+		testSingleElementList(emptyList_addToRearA_A, "emptyList_addToRearA_A", LIST_A, STRING_A);
 
 			// Scenario: 04
 
@@ -325,13 +326,21 @@ public class ListTester {
 	 */
 	private IndexedUnsortedList<Integer> emptyList_addToFrontA_A() {
 		// TODO: Implement change scenario logic
-		return null;
+		IndexedUnsortedList<Integer> list = newList();
+		list.addToFront(ELEMENT_A);
+		return list;
 	}
 	private Scenario<Integer> emptyList_addToFrontA_A = () -> emptyList_addToFrontA_A();
 
 	/** Scenario #03: [] -> addToRear(A) -> [A] 
 	 * @return [A] after addToRear(A)
 	 */
+	private IndexedUnsortedList<Integer> emptyList_addToRearA_A() {
+		IndexedUnsortedList<Integer> list = newList();
+		list.addToRear(ELEMENT_A);
+		return list;
+	}
+	private Scenario<Integer> emptyList_addToRearA_A = () -> emptyList_addToRearA_A();
 
 	 
 	/** Scenario #04: [] -> add(A) -> [A] 
