@@ -686,8 +686,41 @@ public class ListTester {
 	private void testTwoElementList(Scenario<Integer> scenario, String scenarioName, Integer[] contents, String contentsString) {
 		System.out.printf("\nSCENARIO: %s\n\n", scenarioName);
 		try {
-			//TODO: tests for scenarios ending in a 2-element list
+			
 			// IndexedUnsortedList
+
+			// addToFront(X) throws no Exception
+			printTest(scenarioName + "_testAddToFrontX",
+			testAddToFront(scenario.build(), ELEMENT_X, Result.NoException));
+
+			// addToRear(X) throws no Exception
+			printTest(scenarioName + "_testAddToRearX",
+			testAddToRear(scenario.build(), ELEMENT_X, Result.NoException));
+
+			// addAfter(X, B) throws no Exception
+			printTest(scenarioName + "_testAddAfterXB",
+			testAddAfter(scenario.build(), ELEMENT_X, contents[1], Result.NoException));
+
+			// addAfter(X, A) throws no Exception
+			printTest(scenarioName + "_testAddAfterXA",
+			testAddAfter(scenario.build(), ELEMENT_X, contents[0], Result.NoException));
+
+			// addAfter(X, Z) throws NoSuchElementException
+			printTest(scenarioName + "_testAddAfterXZ",
+			testAddAfter(scenario.build(), ELEMENT_X, ELEMENT_Z, Result.NoSuchElement));
+
+			// add(X) throws no Exception
+			printTest(scenarioName + "_testAddX",
+			testAdd(scenario.build(), ELEMENT_X, Result.NoException));
+
+			// add(-1, X) throws IndexOutOfBoundsException
+			printTest(scenarioName + "_testAddNeg1X",
+			testAddAtIndex(scenario.build(), -1, ELEMENT_X, Result.IndexOutOfBounds));
+
+			// add(0, X) throws no Exception
+			printTest(scenarioName + "_testAdd0X",
+			testAddAtIndex(scenario.build(), 0, ELEMENT_X, Result.NoException));
+
 
 			// Iterator
 				// TODO: will add in Lab 10
