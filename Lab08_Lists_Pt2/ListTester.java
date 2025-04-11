@@ -196,6 +196,7 @@ public class ListTester {
 			// Scenario: 06
 		testTwoElementList(A_addToFrontB_BA, "A_addToFrontB_BA", LIST_BA, STRING_BA);
 			// Scenario: 07 #7
+		testTwoElementList(A_addToRearB_AB, "A_addToRearB_AB", LIST_AB, String_AB)
 
 			// Scenario: 10 #8
 		testTwoElementList(A_add0B_BA, "A_add0B_BA", LIST_BA, STRING_BA);
@@ -364,6 +365,12 @@ public class ListTester {
 	/** Scenario #07: [A] -> addToRear(B) -> [A,B]
 	 * @return [A,B] after addToRear(B)
 	 */
+	private IndexedUnsortedList<Integer> A_addToRearB_AB(){
+		IndexedUnsortedList<Integer> list = emptyList_addToFrontA_A();
+		list.addToRear(ELEMENT_B);
+		return list;
+	}
+	private Scenario<Integer> A_addToRearB_AB = () -> A_addToRearB_AB();
 
 	/** Scenario #10: [A] -> add(0,B) -> [B,A]
 	 * @return [B,A] after add(0,B)
