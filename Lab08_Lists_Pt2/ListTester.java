@@ -755,27 +755,27 @@ public class ListTester {
 			testAddToRear(scenario.build(), ELEMENT_X, Result.NoException));
 
 			// addAfter(X, B) throws no Exception
-			printTest(scenarioName + "_testAddAfterXB",
-			testAddAfter(scenario.build(), ELEMENT_X, contents[1], Result.NoException));
+			printTest(scenarioName + "_testAddAfter" + contentsString.charAt(1),
+			testAddAfter(scenario.build(), contents[1], ELEMENT_X, Result.NoException));
 
 			// addAfter(X, A) throws no Exception
-			printTest(scenarioName + "_testAddAfterXA",
-			testAddAfter(scenario.build(), ELEMENT_X, contents[0], Result.NoException));
+			printTest(scenarioName + "_testAddAfter" + contentsString.charAt(0),,
+			testAddAfter(scenario.build(), contents[0], ELEMENT_X, Result.NoException));
 
 			// addAfter(X, Z) throws NoSuchElementException
-			printTest(scenarioName + "_testAddAfterXZ",
+			printTest(scenarioName + "_testAddAfterX",
 			testAddAfter(scenario.build(), ELEMENT_X, ELEMENT_Z, Result.NoSuchElement));
 
 			// add(X) throws no Exception
-			printTest(scenarioName + "_testAddX",
+			printTest(scenarioName + "_testAdd",
 			testAdd(scenario.build(), ELEMENT_X, Result.NoException));
 
 			// add(-1, X) throws IndexOutOfBoundsException
-			printTest(scenarioName + "_testAddNeg1X",
+			printTest(scenarioName + "_testAddAtIndexNeg1X",
 			testAddAtIndex(scenario.build(), -1, ELEMENT_X, Result.IndexOutOfBounds));
 
 			// add(0, X) throws no Exception
-			printTest(scenarioName + "_testAdd0X",
+			printTest(scenarioName + "_testAddAddAtIndex0",
 			testAddAtIndex(scenario.build(), 0, ELEMENT_X, Result.NoException));
 
 			//test by @Ponygator
