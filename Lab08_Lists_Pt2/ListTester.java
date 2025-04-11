@@ -197,7 +197,7 @@ public class ListTester {
 			// Scenario: 07 #7
 
 			// Scenario: 10 #8
-
+		testTwoElementList(A_add0B_BA, "A_add0B_BA", LIST_BA, STRING_BA);
 			
 		//1-element to changed 1-element via set()
 			// Scenario: 16
@@ -359,6 +359,12 @@ public class ListTester {
 	/** Scenario #10: [A] -> add(0,B) -> [B,A]
 	 * @return [B,A] after add(0,B)
 	 */
+	private IndexedUnsortedList<Integer> A_add0B_BA() {
+		IndexedUnsortedList<Integer> list = emptyList_addToFrontA_A();
+		list.add(0, ELEMENT_B);
+		return list;
+	}
+	private Scenario<Integer> A_add0B_BA = () -> A_add0B_BA();
 
 	/** Scenario #12: [A] -> removeFirst() -> [] #5
 	 * @return [] after removeFirst()
@@ -686,7 +692,7 @@ public class ListTester {
 	private void testTwoElementList(Scenario<Integer> scenario, String scenarioName, Integer[] contents, String contentsString) {
 		System.out.printf("\nSCENARIO: %s\n\n", scenarioName);
 		try {
-			//TODO: tests for scenarios ending in a 2-element list
+			
 			// IndexedUnsortedList
 			printTest(scenarioName + "_testRemoveNeg1", testRemoveIndex(scenario.build(), -1, null, Result.IndexOutOfBounds));
 			printTest(scenarioName + "_testRemove0", testRemoveIndex(scenario.build(), 0, contents[0], Result.MatchingValue));
@@ -697,6 +703,48 @@ public class ListTester {
 			printTest(scenarioName + "_testSet0", testSet(scenario.build(), 0, ELEMENT_X, Result.NoException));
 			printTest(scenarioName + "_testSet1", testSet(scenario.build(), 1, ELEMENT_X, Result.NoException));
 			printTest(scenarioName + "_testSet2", testSet(scenario.build(), 2, ELEMENT_X, Result.IndexOutOfBounds));
+
+			//Tests by @HudsonTran1
+			printTest(scenarioName + "_testFirst", testFirst(scenario.build(), contents[0], Result.MatchingValue));
+			printTest(scenarioName + "_testLast", testLast(scenario.build(), contents[1], Result.MatchingValue));
+			printTest(scenarioName + "_testContains" + contentsString.charAt(0), testContains(scenario.build(), contents[0], Result.True));
+			printTest(scenarioName + "_testContains" + contentsString.charAt(1), testContains(scenario.build(), contents[1], Result.True));
+			printTest(scenarioName + "_testContainsX", testContains(scenario.build(), ELEMENT_X, Result.False));
+			printTest(scenarioName + "_testIsEmpty", testIsEmpty(scenario.build(), Result.False));
+			printTest(scenarioName + "_testSize", testSize(scenario.build(), 2));
+			printTest(scenarioName + "_testToString", testToString(scenario.build(), Result.ValidString));
+			// addToFront(X) throws no Exception
+			printTest(scenarioName + "_testAddToFrontX",
+			testAddToFront(scenario.build(), ELEMENT_X, Result.NoException));
+
+			// addToRear(X) throws no Exception
+			printTest(scenarioName + "_testAddToRearX",
+			testAddToRear(scenario.build(), ELEMENT_X, Result.NoException));
+
+			// addAfter(X, B) throws no Exception
+			printTest(scenarioName + "_testAddAfterXB",
+			testAddAfter(scenario.build(), ELEMENT_X, contents[1], Result.NoException));
+
+			// addAfter(X, A) throws no Exception
+			printTest(scenarioName + "_testAddAfterXA",
+			testAddAfter(scenario.build(), ELEMENT_X, contents[0], Result.NoException));
+
+			// addAfter(X, Z) throws NoSuchElementException
+			printTest(scenarioName + "_testAddAfterXZ",
+			testAddAfter(scenario.build(), ELEMENT_X, ELEMENT_Z, Result.NoSuchElement));
+
+			// add(X) throws no Exception
+			printTest(scenarioName + "_testAddX",
+			testAdd(scenario.build(), ELEMENT_X, Result.NoException));
+
+			// add(-1, X) throws IndexOutOfBoundsException
+			printTest(scenarioName + "_testAddNeg1X",
+			testAddAtIndex(scenario.build(), -1, ELEMENT_X, Result.IndexOutOfBounds));
+
+			// add(0, X) throws no Exception
+			printTest(scenarioName + "_testAdd0X",
+			testAddAtIndex(scenario.build(), 0, ELEMENT_X, Result.NoException));
+
 			// Iterator
 				// TODO: will add in Lab 10
 				// test to construct iterator
