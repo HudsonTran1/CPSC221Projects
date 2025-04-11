@@ -759,7 +759,7 @@ public class ListTester {
 			testAddAfter(scenario.build(), contents[1], ELEMENT_X, Result.NoException));
 
 			// addAfter(X, A) throws no Exception
-			printTest(scenarioName + "_testAddAfter" + contentsString.charAt(0),,
+			printTest(scenarioName + "_testAddAfter" + contentsString.charAt(0),
 			testAddAfter(scenario.build(), contents[0], ELEMENT_X, Result.NoException));
 
 			// addAfter(X, Z) throws NoSuchElementException
