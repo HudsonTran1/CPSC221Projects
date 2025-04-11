@@ -196,7 +196,7 @@ public class ListTester {
 			// Scenario: 06
 		testTwoElementList(A_addToFrontB_BA, "A_addToFrontB_BA", LIST_BA, STRING_BA);
 			// Scenario: 07 #7
-		testTwoElementList(A_addToRearB_AB, "A_addToRearB_AB", LIST_AB, String_AB)
+		testTwoElementList(A_addToRearB_AB, "A_addToRearB_AB", LIST_AB, STRING_AB);
 
 			// Scenario: 10 #8
 		testTwoElementList(A_addAtIndex0B_BA, "A_add0B_BA", LIST_BA, STRING_BA);
