@@ -76,9 +76,10 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 
 	@Override
 	public E removeLast() {
-		// TODO 
+		// Daniel L
+		if (isEmpty()) { throw new EmptyCollectionException("No element to remove."); }
 		modCount++; // DO NOT REMOVE ME
-		return null;
+		return remove(decrement(rear)); // Uses support method for decrement, also uses seperate remove(int) method.
 	}
 
 	@Override
@@ -103,14 +104,30 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 
 	@Override
 	public E remove(int index) {
-		// TODO 
+		// Daniel L
+		if (index == NOT_FOUND) { throw new NoSuchElementException(); }
+        	E result = this.array[index];
+        	// shift! Uses increment support method.
+		int leftIndex = index, rightIndex = increment(index);
+        	while (rightIndex < rear) {
+            		array[leftIndex] = array[rightIndex];
+            		leftIndex = increment(leftIndex);
+            		rightIndex = increment(rightIndex);
+        	}
+        	rear = decrement(rear);
+        	this.array[rear] = null;
 		modCount++; // DO NOT REMOVE ME
-		return null;
+		return result;
 	}
 
 	@Override
 	public void set(int index, E element) {
-		// TODO 
+		// Daniel L
+		int tempIndex = index;
+		E tempElement = element;
+
+		if (!isEmpty()) { remove(tempIndex); }
+		add(tempIndex, tempElement);
 		modCount++; // DO NOT REMOVE ME
 	}
 
@@ -173,6 +190,14 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 		// TODO
 		return result + "]";
 	}
+
+	private int decrement(int index) {
+        	return (index - 1) % array.length;
+    	} // for use in other methods
+
+	private int increment(int index) {
+        	return (index + 1) % array.length;
+    	} // for  use in other methods
 
 	// IGNORE THE FOLLOWING COMMENTED OUT CODE UNTIL LAB 10
 	// DON'T DELETE ME, HOWEVER!!!
