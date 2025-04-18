@@ -57,21 +57,32 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 
 	@Override
 	public void addAfter(E element, E target) {
-		// TODO 
+		add(indexOf(target) + 1, element); // create a subcall into the add at index method, using the index found with indexOf() + 1
 		modCount++; // DO NOT REMOVE ME
 	}
 
 	@Override
 	public void add(int index, E element) {
-		// TODO 
+		if (index < 0) {
+			throw new ArrayIndexOutOfBoundsException("cannot add element at index" + index);
+		}
+		//check if we need to expand the capacity
+		if (rear == array.length) {
+			expandCapacity();
+		}
+		//shift elements to make room for the new one
+		for (int i = rear; i >= index; i--) {
+			array[i+1] = array[i];
+		}
+		array[index] = element;
+		rear++;
 		modCount++; // DO NOT REMOVE ME
 	}
 
 	@Override
 	public E removeFirst() {
-		// TODO 
 		modCount++; // DO NOT REMOVE ME
-		return null;
+		return remove(0);
 	}
 
 	@Override
