@@ -58,7 +58,7 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 	@Override
 	public void addAfter(E element, E target) {
 		add(indexOf(target) + 1, element); // create a subcall into the add at index method, using the index found with indexOf() + 1
-		modCount++; // DO NOT REMOVE ME
+		//modCount++; // DO NOT REMOVE ME --- can remove this because addAfter calls into add(), which already ++ the modCount
 	}
 
 	@Override
