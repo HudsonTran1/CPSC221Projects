@@ -38,20 +38,34 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 
 	@Override
 	public void addToFront(E element) {
-		// TODO 
+		if (rear == array.length) {
+			expandCapacity();
+		}
+		for (int i = rear - 1; i >= 0; i--) {
+			array[i+1] = array[i];
+		}
+		array[0] = element;
+		rear++;
 		modCount++; // DO NOT REMOVE ME
-		
 	}
 
 	@Override
 	public void addToRear(E element) {
-		// TODO 
+		if (rear == array.length) {
+			expandCapacity();
+		}
+		array[rear] = element;
+		rear++;
 		modCount++; // DO NOT REMOVE ME
 	}
 
 	@Override
 	public void add(E element) {
-		// TODO 
+		if (rear == array.length) {
+			expandCapacity();
+		}
+		array[rear] = element;
+		rear++;
 		modCount++; // DO NOT REMOVE ME
 	}
 
@@ -76,48 +90,50 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 
 	@Override
 	public E removeLast() {
-		// TODO 
+		// Daniel L
 		modCount++; // DO NOT REMOVE ME
-		return null;
+		return remove(rear - 1); // remove the last element in the array, directly before the empty slot at index rear; guard statements will be triggered by remove(int index), as will modCount (left modCount++ anyway because we were told to, but technically not necessary)
 	}
 
 	@Override
 	public E remove(E element) {
-		int index = indexOf(element);
-		if (index == NOT_FOUND) {
-			throw new NoSuchElementException();
-		}
-		
-		E retVal = array[index];
-		
-		rear--;
-		//shift elements
-		for (int i = index; i < rear; i++) {
-			array[i] = array[i+1];
-		}
-		array[rear] = null;
-
+		// Daniel L
 		modCount++; // DO NOT REMOVE ME
-		return retVal;
+		return remove(indexOf(element)); // funnel into the remove(int index) method; guard statements will be triggered by remove(int index), as will modCount (left modCount++ anyway because we were told to, but technically not necessary)
 	}
 
 	@Override
 	public E remove(int index) {
-		// TODO 
+		// Daniel L
+		if (isEmpty()) { throw new EmptyCollectionException("list"); } // guard for empty list, throw appropriate exception
+		if (index < 0 || index >= rear) { throw new NoSuchElementException(); } // changed guard statement to protect against all invalid indices, including all negative indices, and all indices past the end of the array
+        	E result = this.array[index]; // store element to return
+
+		rear--; // decrement rear
+		// shift elements -- copied from original remove(E element)
+		for (int i = index; i < rear; i++) {
+			array[i] = array[i+1];
+		}
+        	this.array[rear] = null; //n ull out the now empty end of the list
 		modCount++; // DO NOT REMOVE ME
-		return null;
+		return result; // return the removed element
 	}
 
 	@Override
 	public void set(int index, E element) {
-		// TODO 
+		// Daniel L
+		remove(index); // this subcall triggers the necessary guard statements
+		add(element, index); // technically this implementation is less efficient as it requires two shifts (one by remove and by add) but the order is the same
 		modCount++; // DO NOT REMOVE ME
 	}
 
 	@Override
 	public E get(int index) {
-		// TODO 
-		return null;
+		// @Ponygator
+		if(index >= rear) {
+			throw new IndexOutOfBoundsException();
+		}
+		return array[index];
 	}
 
 	@Override
@@ -140,14 +156,20 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 
 	@Override
 	public E first() {
-		// TODO 
-		return null;
+		// @Ponygator
+		if(rear == 0) {
+			throw new NoSuchElementException();
+		)
+		return array[0];
 	}
 
 	@Override
 	public E last() {
-		// TODO 
-		return null;
+		// @Ponygator
+		if(rear == 0) {
+			throw new NoSuchElementException();
+		}
+		return array[rear-1];
 	}
 
 	@Override
@@ -157,21 +179,25 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 
 	@Override
 	public boolean isEmpty() {
-		// TODO 
-		return false;
+		return rear == 0;
 	}
 
 	@Override
 	public int size() {
-		// TODO 
-		return 0;
+		return rear;
 	}
 
 	@Override
 	public String toString() {
 		String result = "[";
-		// TODO
-		return result + "]";
+		for (int i = 0; i < rear; i++) {
+			result += array[i];
+			if (i < rear - 1) {
+				result += ", ";
+			}
+		}
+		result += "]";
+		return result;
 	}
 
 	// IGNORE THE FOLLOWING COMMENTED OUT CODE UNTIL LAB 10
