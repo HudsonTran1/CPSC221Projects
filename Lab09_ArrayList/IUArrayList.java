@@ -38,47 +38,35 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 
 	@Override
 	public void addToFront(E element) {
-		if (rear == array.length) {
-			expandCapacity();
-		}
-		for (int i = rear - 1; i >= 0; i--) {
-			array[i+1] = array[i];
-		}
-		array[0] = element;
-		rear++;
+		add(0, element); // call into add(int index, E element) for code reuse
 		modCount++; // DO NOT REMOVE ME
 	}
 
 	@Override
 	public void addToRear(E element) {
-		if (rear == array.length) {
-			expandCapacity();
-		}
-		array[rear] = element;
-		rear++;
+		add(rear, element); // call into add(int index, E element) at the index of the rear
 		modCount++; // DO NOT REMOVE ME
 	}
 
 	@Override
 	public void add(E element) {
-		if (rear == array.length) {
-			expandCapacity();
-		}
-		array[rear] = element;
-		rear++;
+		addToRear(element); // call into addToRear
 		modCount++; // DO NOT REMOVE ME
 	}
 
 	@Override
 	public void addAfter(E element, E target) {
-		add(indexOf(target) + 1, element); // create a subcall into the add at index method, using the index found with indexOf() + 1
-		//modCount++; // DO NOT REMOVE ME --- can remove this because addAfter calls into add(), which already ++ the modCount
+		add(indexOf(target) + 1, element); // call into the add at index method, using the index found directly after the indexOf() the target
+		modCount++;
 	}
 
 	@Override
 	public void add(int index, E element) {
+		//guard for negative indices or indices past rear of collection
 		if (index < 0) {
-			throw new ArrayIndexOutOfBoundsException("cannot add element at index" + index);
+			throw new IndexOutOfBoundsException(index);
+		} else if (index > rear) {
+			throw new IndexOutOfBoundsException("Array index out of range: " + index + "; cannot add element beyond the rear of the list.");
 		}
 		//check if we need to expand the capacity
 		if (rear == array.length) {
@@ -88,15 +76,15 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 		for (int i = rear; i >= index; i--) {
 			array[i+1] = array[i];
 		}
-		array[index] = element;
-		rear++;
+		array[index] = element; // set the element at the index
+		rear++; // increment rear
 		modCount++; // DO NOT REMOVE ME
 	}
 
 	@Override
 	public E removeFirst() {
 		modCount++; // DO NOT REMOVE ME
-		return remove(0);
+		return remove(0); // call into the remove(int index); guard statements will be triggered by remove(int index), as will modCount (left modCount++ anyway because we were told to, but technically not necessary)
 	}
 
 	@Override
@@ -110,15 +98,14 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 	public E remove(E element) {
 		// Daniel L
 		modCount++; // DO NOT REMOVE ME
-		return remove(indexOf(element)); // funnel into the remove(int index) method; guard statements will be triggered by remove(int index), as will modCount (left modCount++ anyway because we were told to, but technically not necessary)
+		return remove(indexOf(element)); // call into the remove(int index); guard statements will be triggered by remove(int index), as will modCount (left modCount++ anyway because we were told to, but technically not necessary)
 	}
 
 	@Override
 	public E remove(int index) {
 		// Daniel L
-		if (isEmpty()) { throw new EmptyCollectionException("list"); } // guard for empty list, throw appropriate exception
-		if (index < 0 || index >= rear) { throw new NoSuchElementException(); } // changed guard statement to protect against all invalid indices, including all negative indices, and all indices past the end of the array
-        	E result = this.array[index]; // store element to return
+		if (index < 0 || index >= rear) { throw new IndexOutOfBoundsException(); } // guard statement to protect against all invalid indices, including all negative indices, and all indices past the end of the array
+        E result = this.array[index]; // store element to return
 
 		rear--; // decrement rear
 		// shift elements -- copied from original remove(E element)
@@ -134,16 +121,14 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 	public void set(int index, E element) {
 		// Daniel L
 		remove(index); // this subcall triggers the necessary guard statements
-		add(element, index); // technically this implementation is less efficient as it requires two shifts (one by remove and by add) but the order is the same
+		add(index, element); // technically this implementation is less efficient as it requires two shifts (one by remove and by add) but the order is the same
 		modCount++; // DO NOT REMOVE ME
 	}
 
 	@Override
 	public E get(int index) {
 		// @Ponygator
-		if(index >= rear) {
-			throw new IndexOutOfBoundsException();
-		}
+		if (index < 0 || index >= rear) { throw new IndexOutOfBoundsException(); } // guard statement to protect against all invalid indices, including all negative indices, and all indices past the end of the array
 		return array[index];
 	}
 
@@ -161,25 +146,24 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 				}
 			}
 		}
-		
+		// Put this guard statement here instead of in the add and remove methods to reduce code duplication
+		if (index == NOT_FOUND) {
+			throw new NoSuchElementException();
+		}
 		return index;
 	}
 
 	@Override
 	public E first() {
 		// @Ponygator
-		if(rear == 0) {
-			throw new NoSuchElementException();
-		)
+		if(isEmpty()) {	throw new NoSuchElementException(); } // guard statement to protect against empty list
 		return array[0];
 	}
 
 	@Override
 	public E last() {
 		// @Ponygator
-		if(rear == 0) {
-			throw new NoSuchElementException();
-		}
+		if(isEmpty()) {	throw new NoSuchElementException(); } // guard statement to protect against empty list
 		return array[rear-1];
 	}
 
