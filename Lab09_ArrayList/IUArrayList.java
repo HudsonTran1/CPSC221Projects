@@ -77,57 +77,39 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 	@Override
 	public E removeLast() {
 		// Daniel L
-		if (isEmpty()) { throw new EmptyCollectionException("No element to remove."); }
 		modCount++; // DO NOT REMOVE ME
-		return remove(decrement(rear)); // Uses support method for decrement, also uses seperate remove(int) method.
+		return remove(rear - 1); // remove the last element in the array, directly before the empty slot at index rear; guard statements will be triggered by remove(int index), as will modCount (left modCount++ anyway because we were told to, but technically not necessary)
 	}
 
 	@Override
 	public E remove(E element) {
-		int index = indexOf(element);
-		if (index == NOT_FOUND) {
-			throw new NoSuchElementException();
-		}
-		
-		E retVal = array[index];
-		
-		rear--;
-		//shift elements
-		for (int i = index; i < rear; i++) {
-			array[i] = array[i+1];
-		}
-		array[rear] = null;
-
+		// Daniel L
 		modCount++; // DO NOT REMOVE ME
-		return retVal;
+		return remove(indexOf(element)); // funnel into the remove(int index) method; guard statements will be triggered by remove(int index), as will modCount (left modCount++ anyway because we were told to, but technically not necessary)
 	}
 
 	@Override
 	public E remove(int index) {
 		// Daniel L
-		if (index == NOT_FOUND) { throw new NoSuchElementException(); }
-        	E result = this.array[index];
-        	// shift! Uses increment support method.
-		int leftIndex = index, rightIndex = increment(index);
-        	while (rightIndex < rear) {
-            		array[leftIndex] = array[rightIndex];
-            		leftIndex = increment(leftIndex);
-            		rightIndex = increment(rightIndex);
-        	}
-        	rear = decrement(rear);
-        	this.array[rear] = null;
+		if (isEmpty()) { throw new EmptyCollectionException("list"); } // guard for empty list, throw appropriate exception
+		if (index < 0 || index >= rear) { throw new NoSuchElementException(); } // changed guard statement to protect against all invalid indices, including all negative indices, and all indices past the end of the array
+        	E result = this.array[index]; // store element to return
+
+		rear--; // decrement rear
+		// shift elements -- copied from original remove(E element)
+		for (int i = index; i < rear; i++) {
+			array[i] = array[i+1];
+		}
+        	this.array[rear] = null; //n ull out the now empty end of the list
 		modCount++; // DO NOT REMOVE ME
-		return result;
+		return result; // return the removed element
 	}
 
 	@Override
 	public void set(int index, E element) {
 		// Daniel L
-		int tempIndex = index;
-		E tempElement = element;
-
-		if (!isEmpty()) { remove(tempIndex); }
-		add(tempIndex, tempElement);
+		remove(index); // this subcall triggers the necessary guard statements
+		add(element, index); // technically this implementation is less efficient as it requires two shifts (one by remove and by add) but the order is the same
 		modCount++; // DO NOT REMOVE ME
 	}
 
