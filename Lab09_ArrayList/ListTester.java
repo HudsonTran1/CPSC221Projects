@@ -863,6 +863,26 @@ public class ListTester {
 			//TODO: tests for scenarios resulting in a 3-element list
 			// IndexedUnsortedList
 
+			//Test by @Ponygator
+			printTest(scenarioName + "_testGet(scenario.build(), 2, contents[2], Result.MatchingValue));
+			printTest(scenarioName + "_testGet(scenario.build(), 3, contents[3], null, Result.IndexOutOfBounds));
+			printTest(scenarioName + "_testIndexOf" + contentsString.charAt(0), testIndexOf(scenario.build(), contents[0], 0));
+			printTest(scenarioName + "_testIndexOf" + contentsString.charAt(1), testIndexOf(scenario.build(), contents[1], 1));
+			printTest(scenarioName + "_testIndexOf" + contentsString.charAt(2), testIndexOf(scenario.build(), contents[2], 2));
+			printTest(scenarioName + "_testIndexOfX", + testIndexOf(scenario.build(), ELEMENT_X, -1));
+			printTest(scenarioName + "_testFirst", testFirst(scenario.build(), contents[0], Result.MatchingValue));
+			printTest(scenarioName + "_testLast", testLast(scenario.build(), contents[2], Result.MatchingValue));
+			printTest(scenarioName + "_testContainsA", testContains(scenario.build(), ELEMENT_X, Result.True));
+			printTest(scenarioName + "_testContainsB", testContains(scenario.build(), ELEMENT_X, Result.True));
+			printTest(scenarioName + "_testContainsC", testContains(scenario.build(), ELEMENT_X, Result.True));
+			printTest(scenarioName + "_testContainsX", testContains(scenario.build(), ELEMENT_X, Result.False));
+			printTest(scenarioName + "_testIsEmpty", testIsEmpty(scenario.build(), Result.False));
+			printTest(scenarioName + "_testSize", testSize(scenario.build(), 3));
+			printTest(scenarioName + "_testToString", testToString(scenario.build(), Result.ValidString));
+			
+			
+			
+
 			// Tests by @eafigal
 			printTest(scenarioName + "_testRemove" + contentsString.charAt(1), testRemoveElement(scenario.build(), contents[1], Result.MatchingValue));
 			printTest(scenarioName + "_testRemove" + contentsString.charAt(2), testRemoveElement(scenario.build(), contents[2], Result.MatchingValue));
@@ -880,6 +900,7 @@ public class ListTester {
 			printTest(scenarioName + "_testGetNeg1", testGet(scenario.build(), -1, null, Result.IndexOutOfBounds));
 			printTest(scenarioName + "_testGet0", testGet(scenario.build(), 0, contents[0], Result.MatchingValue));
 			printTest(scenarioName + "_testGet1", testGet(scenario.build(), 1, contents[1], Result.MatchingValue));
+
 
 			// Iterator
 				// TODO: will add in Lab 10
