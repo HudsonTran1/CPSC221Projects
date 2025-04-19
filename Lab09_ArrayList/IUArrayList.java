@@ -156,21 +156,25 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 
 	@Override
 	public boolean isEmpty() {
-		// TODO 
-		return false;
+		return rear == 0;
 	}
 
 	@Override
 	public int size() {
-		// TODO 
-		return 0;
+		return rear;
 	}
 
 	@Override
 	public String toString() {
 		String result = "[";
-		// TODO
-		return result + "]";
+		for (int i = 0; i < rear; i++) {
+			result += array[i];
+			if (i < rear - 1) {
+				result += ", ";
+			}
+		}
+		result += "]";
+		return result;
 	}
 
 	// IGNORE THE FOLLOWING COMMENTED OUT CODE UNTIL LAB 10
