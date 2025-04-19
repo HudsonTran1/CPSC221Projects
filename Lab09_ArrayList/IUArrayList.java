@@ -173,14 +173,6 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 		return result + "]";
 	}
 
-	private int decrement(int index) {
-        	return (index - 1) % array.length;
-    	} // for use in other methods
-
-	private int increment(int index) {
-        	return (index + 1) % array.length;
-    	} // for  use in other methods
-
 	// IGNORE THE FOLLOWING COMMENTED OUT CODE UNTIL LAB 10
 	// DON'T DELETE ME, HOWEVER!!!
 	public Iterator<E> iterator() {
