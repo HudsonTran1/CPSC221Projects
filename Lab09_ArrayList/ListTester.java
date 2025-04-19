@@ -176,19 +176,19 @@ public class ListTester {
 		testSingleElementList(emptyList_addToRearA_A, "emptyList_addToRearA_A", LIST_A, STRING_A);
 
 			// Scenario: 04
-
+		testSingleElementList(emptyList_addA_A, "emptyList_addA_A", LIST_A, STRING_A);
 			// Scenario: 05
-
+		testSingleElementList(emptyList_addAtIndex0A_A, "emptyList_addAtIndex0A_A", LIST_A, STRING_A);
 			
 		//1-element to empty list
 			// Scenario: 12 #5
 		testEmptyList(A_removeFirst_EMPTY, "A_removeFirst_EMPTY");
 			// Scenario: 13
-
+		testEmptyList(A_removeLast_EMPTY, "A_removeLast_EMPTY");
 			// Scenario: 14 #5
 		testEmptyList(A_removeA_EMPTY, "A_removeA_EMPTY");
 			// Scenario: 15
-
+		testEmptyList(A_removeIndex0_EMPTY, "A_removeIndex0_EMPTY");
 			// Scenario: 44
 
 
@@ -347,10 +347,22 @@ public class ListTester {
 	/** Scenario #04: [] -> add(A) -> [A] 
 	 * @return [A] after add(A)
 	 */
-
+	private IndexedUnsortedList<Integer> emptyList_addA_A() {
+		IndexedUnsortedList<Integer> list = newList();
+		list.add(ELEMENT_A);
+		return list;
+	}
+	private Scenario<Integer> emptyList_addA_A = () -> emptyList_addA_A();
+	
 	/** Scenario #05: [] -> add(0, A) -> [A] 
 	 * @return [A] after add(0, A)
 	 */
+	private IndexedUnsortedList<Integer> emptyList_addAtIndex0A_A() {
+		IndexedUnsortedList<Integer> list = newList();
+		list.add(0, ELEMENT_A);
+		return list;
+	}
+	private Scenario<Integer> emptyList_addAtIndex0A_A = () -> emptyList_addAtIndex0A_A();
 
 	/** Scenario #06: [A] -> addToFront(B) -> [B,A] 
 	 * @return [B,A] after addToFront(B)
@@ -395,6 +407,12 @@ public class ListTester {
 	/** Scenario #13: [A] -> removeLast() -> [] 
 	 * @return [] after removeLast()
 	 */
+	private IndexedUnsortedList<Integer> A_removeLast_EMPTY() {
+		IndexedUnsortedList<Integer> list = emptyList_addToFrontA_A(); 
+		list.removeLast();
+		return list;
+	}
+	private Scenario<Integer> A_removeLast_EMPTY = () -> A_removeLast_EMPTY();
 
 	/** Scenario #14: [A] -> remove(A) -> [] #5
 	 * @return [] after remove(A)
@@ -409,6 +427,12 @@ public class ListTester {
 	/** Scenario #15: [A] -> remove(0) -> [] 
 	 * @return [] after remove(0)
 	 */
+	private IndexedUnsortedList<Integer> A_removeIndex0_EMPTY() {
+		IndexedUnsortedList<Integer> list = emptyList_addToFrontA_A(); 
+		list.remove(0);
+		return list;
+	}
+	private Scenario<Integer> A_removeIndex0_EMPTY = () -> A_removeIndex0_EMPTY();
 
 	 
 	/** Scenario #16: [A] -> set(0,B) -> [B] 
