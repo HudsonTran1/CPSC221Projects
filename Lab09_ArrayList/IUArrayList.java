@@ -56,6 +56,7 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 
 	@Override
 	public void addAfter(E element, E target) {
+		if (!contains(target)) { throw new NoSuchElementException(); }
 		add(indexOf(target) + 1, element); // call into the add at index method, using the index found directly after the indexOf() the target
 		modCount++;
 	}
@@ -83,6 +84,7 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 
 	@Override
 	public E removeFirst() {
+		if(rear == 0) { throw new NoSuchElementException(); }
 		modCount++; // DO NOT REMOVE ME
 		return remove(0); // call into the remove(int index); guard statements will be triggered by remove(int index), as will modCount (left modCount++ anyway because we were told to, but technically not necessary)
 	}
@@ -90,6 +92,7 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 	@Override
 	public E removeLast() {
 		// Daniel L
+		if(rear == 0) { throw new NoSuchElementException(); }
 		modCount++; // DO NOT REMOVE ME
 		return remove(rear - 1); // remove the last element in the array, directly before the empty slot at index rear; guard statements will be triggered by remove(int index), as will modCount (left modCount++ anyway because we were told to, but technically not necessary)
 	}
@@ -97,6 +100,7 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 	@Override
 	public E remove(E element) {
 		// Daniel L
+		if (!contains(element)) { throw new NoSuchElementException(); }
 		modCount++; // DO NOT REMOVE ME
 		return remove(indexOf(element)); // call into the remove(int index); guard statements will be triggered by remove(int index), as will modCount (left modCount++ anyway because we were told to, but technically not necessary)
 	}
@@ -146,10 +150,7 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 				}
 			}
 		}
-		// Put this guard statement here instead of in the add and remove methods to reduce code duplication
-		if (index == NOT_FOUND) {
-			throw new NoSuchElementException();
-		}
+	
 		return index;
 	}
 
