@@ -38,86 +38,102 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 
 	@Override
 	public void addToFront(E element) {
-		// TODO 
+		add(0, element); // call into add(int index, E element) for code reuse
 		modCount++; // DO NOT REMOVE ME
-		
 	}
 
 	@Override
 	public void addToRear(E element) {
-		// TODO 
+		add(rear, element); // call into add(int index, E element) at the index of the rear
 		modCount++; // DO NOT REMOVE ME
 	}
 
 	@Override
 	public void add(E element) {
-		// TODO 
+		addToRear(element); // call into addToRear
 		modCount++; // DO NOT REMOVE ME
 	}
 
 	@Override
 	public void addAfter(E element, E target) {
-		// TODO 
-		modCount++; // DO NOT REMOVE ME
+		if (!contains(target)) { throw new NoSuchElementException(); }
+		add(indexOf(target) + 1, element); // call into the add at index method, using the index found directly after the indexOf() the target
+		modCount++;
 	}
 
 	@Override
 	public void add(int index, E element) {
-		// TODO 
+		//guard for negative indices or indices past rear of collection
+		if (index < 0) {
+			throw new IndexOutOfBoundsException(index);
+		} else if (index > rear) {
+			throw new IndexOutOfBoundsException("Array index out of range: " + index + "; cannot add element beyond the rear of the list.");
+		}
+		//check if we need to expand the capacity
+		if (rear == array.length) {
+			expandCapacity();
+		}
+		//shift elements to make room for the new one
+		for (int i = rear; i >= index; i--) {
+			array[i+1] = array[i];
+		}
+		array[index] = element; // set the element at the index
+		rear++; // increment rear
 		modCount++; // DO NOT REMOVE ME
 	}
 
 	@Override
 	public E removeFirst() {
-		// TODO 
+		if(rear == 0) { throw new NoSuchElementException(); }
 		modCount++; // DO NOT REMOVE ME
-		return null;
+		return remove(0); // call into the remove(int index); guard statements will be triggered by remove(int index), as will modCount (left modCount++ anyway because we were told to, but technically not necessary)
 	}
 
 	@Override
 	public E removeLast() {
-		// TODO 
+		// Daniel L
+		if(rear == 0) { throw new NoSuchElementException(); }
 		modCount++; // DO NOT REMOVE ME
-		return null;
+		return remove(rear - 1); // remove the last element in the array, directly before the empty slot at index rear; guard statements will be triggered by remove(int index), as will modCount (left modCount++ anyway because we were told to, but technically not necessary)
 	}
 
 	@Override
 	public E remove(E element) {
-		int index = indexOf(element);
-		if (index == NOT_FOUND) {
-			throw new NoSuchElementException();
-		}
-		
-		E retVal = array[index];
-		
-		rear--;
-		//shift elements
-		for (int i = index; i < rear; i++) {
-			array[i] = array[i+1];
-		}
-		array[rear] = null;
-
+		// Daniel L
+		if (!contains(element)) { throw new NoSuchElementException(); }
 		modCount++; // DO NOT REMOVE ME
-		return retVal;
+		return remove(indexOf(element)); // call into the remove(int index); guard statements will be triggered by remove(int index), as will modCount (left modCount++ anyway because we were told to, but technically not necessary)
 	}
 
 	@Override
 	public E remove(int index) {
-		// TODO 
+		// Daniel L
+		if (index < 0 || index >= rear) { throw new IndexOutOfBoundsException(); } // guard statement to protect against all invalid indices, including all negative indices, and all indices past the end of the array
+        E result = this.array[index]; // store element to return
+
+		rear--; // decrement rear
+		// shift elements -- copied from original remove(E element)
+		for (int i = index; i < rear; i++) {
+			array[i] = array[i+1];
+		}
+        	this.array[rear] = null; //n ull out the now empty end of the list
 		modCount++; // DO NOT REMOVE ME
-		return null;
+		return result; // return the removed element
 	}
 
 	@Override
 	public void set(int index, E element) {
-		// TODO 
+		// Daniel L
+		remove(index); // this subcall triggers the necessary guard statements
+		add(index, element); // technically this implementation is less efficient as it requires two shifts (one by remove and by add) but the order is the same
 		modCount++; // DO NOT REMOVE ME
 	}
 
 	@Override
 	public E get(int index) {
-		// TODO 
-		return null;
+		// @Ponygator
+		if (index < 0 || index >= rear) { throw new IndexOutOfBoundsException(); } // guard statement to protect against all invalid indices, including all negative indices, and all indices past the end of the array
+		return array[index];
 	}
 
 	@Override
@@ -134,20 +150,22 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 				}
 			}
 		}
-		
+	
 		return index;
 	}
 
 	@Override
 	public E first() {
-		// TODO 
-		return null;
+		// @Ponygator
+		if(isEmpty()) {	throw new NoSuchElementException(); } // guard statement to protect against empty list
+		return array[0];
 	}
 
 	@Override
 	public E last() {
-		// TODO 
-		return null;
+		// @Ponygator
+		if(isEmpty()) {	throw new NoSuchElementException(); } // guard statement to protect against empty list
+		return array[rear-1];
 	}
 
 	@Override
@@ -157,21 +175,25 @@ public class IUArrayList<E> implements IndexedUnsortedList<E> {
 
 	@Override
 	public boolean isEmpty() {
-		// TODO 
-		return false;
+		return rear == 0;
 	}
 
 	@Override
 	public int size() {
-		// TODO 
-		return 0;
+		return rear;
 	}
 
 	@Override
 	public String toString() {
 		String result = "[";
-		// TODO
-		return result + "]";
+		for (int i = 0; i < rear; i++) {
+			result += array[i];
+			if (i < rear - 1) {
+				result += ", ";
+			}
+		}
+		result += "]";
+		return result;
 	}
 
 	// IGNORE THE FOLLOWING COMMENTED OUT CODE UNTIL LAB 10
