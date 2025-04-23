@@ -1,3 +1,4 @@
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 /**
@@ -24,14 +25,14 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 
 	@Override
 	public void addToFront(E element) {
-		LinearNode<E> tempNode = new LinearNode<E>(element);
+		LinearNode<E> tempNode = new LinearNode<E>(element); // temp node
+		tempNode.setNext(front); // set the next of the new node to point to the old front
 		if (isEmpty()) {
-			rear = tempNode;
-		} else {
-			tempNode.setNext(front);
-		}
-		front = tempNode;
-		tempNode = null;
+			rear = tempNode; // fix rear reference if empty
+		}		
+		front = tempNode; // add new node as the front
+		tempNode = null; // null out the temp node
+		
 		count++;
 		modCount++;
 		
@@ -47,6 +48,7 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 		LinearNode<E> tempNode = new LinearNode<E>(element);
 		if (isEmpty()) {
 			front = tempNode;
+			rear = tempNode;
 		} else {
 			rear.setNext(tempNode);
 		}
@@ -65,27 +67,42 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 
 	@Override
 	public void add(int index, E element) {
-		if(index < 0 || index > count) { throw new IndexOutOfBoundsException(); }
-		LinearNode<E> temp = new LinearNode<>(element);
-		LinearNode<E> previous = getLinearNode(index - 1);
-		LinearNode<E> current = getLinearNode(index);
+		if(index < 0 || index > count) { throw new IndexOutOfBoundsException(); } // guard
+		
+		LinearNode<E> temp = new LinearNode<>(element); // new node to add
+		LinearNode<E> previous = getLinearNode(index - 1); // node preceding
+		LinearNode<E> current = getLinearNode(index); // node originally at the index
+		LinearNode<E> following = getLinearNode(index + 1);
 
-		if(previous != null) {
-			temp.setNext(current); // point the next of the new node to the next node 
+		temp.setNext(current); // point the next of the new node to the next node 
+		
+		if(previous == null) {
+			front = temp;
+	    } else {
 			previous.setNext(temp); // point the next of the previous node to the new node
-	    }
+		}
+		if(following == null) {
+			if(current == null) {
+				rear = temp;
+			} else {
+				rear = current;
+			}
+		}
+
 		count++;
 		modCount++;		
 	}
 
 	@Override
 	public E removeFirst() {
-		return first();
+		if(isEmpty()) { throw new NoSuchElementException(); }
+		return removeElement(null, front);
 	}
 
 	@Override
 	public E removeLast() {
-		return last();
+		if (isEmpty()) { throw new NoSuchElementException(); }
+		return removeElement(getLinearNode(count - 2), rear); 
 	}
 
 	@Override
@@ -128,33 +145,31 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 	@Override
 	public E get(int index) {
 		if(index < 0 || index >= count) { throw new IndexOutOfBoundsException(); }
-		if(front == null) {throw new IndexOutOfBoundsException(); } //TODO
 		LinearNode<E> current = front;
 
 		for (int i = 0; i < index; i++) {
 			current = current.getNext();
 		}
-
-		if(current.getElement() == null) {
-			throw new NoSuchElementException();
-		} else {
-			return current.getElement();
-		}
+		
+		if(current == null) { throw new IndexOutOfBoundsException(); }
+		return current.getElement();
+		
 	}
 
 	@Override
 	public int indexOf(E element) {
 		LinearNode<E> current = this.front;
 		
-		for(int i = 0; current != null; i++, current = current.getNext()) {
+		for(int i = 0; current != null; i++) {
 			if (current.getElement().equals(element)) {
 				return i;
 			}
+			current = current.getNext();
 		}
 		return NOT_FOUND;
 	}
 
-	//support method to find node with target element -- prevents unnecessary call into indexOf which is insignificantly more efficient but makes me happy
+	// support method to find node with target element -- prevents unnecessary call into indexOf which is insignificantly more efficient but makes me happy
 	private LinearNode<E> getLinearNode(E target) {
 		LinearNode<E> current = this.front;
 		
@@ -166,9 +181,11 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 		return null;
 	}
 
+	// support method to find node at index 
 	private LinearNode<E> getLinearNode(int index) {
+		if(index < 0 || index > count) { return null; }
 		LinearNode<E> current = this.front;
-
+		
 		for (int i = 0; i < index; i++) {
 			current = current.getNext();
 		}
@@ -190,11 +207,13 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 
 	@Override 
 	public boolean contains(E target) {
+		if(isEmpty()) { return false; }
 		LinearNode<E> current = this.front;
 		while(current != null) {
 			if(current.getElement().equals(target)) {
 				return true;
 			}
+			current = current.getNext();
 		}
 		return false;
 	}
