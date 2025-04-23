@@ -68,10 +68,12 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 		if(index < 0 || index > count) { throw new IndexOutOfBoundsException(); }
 		LinearNode<E> temp = new LinearNode<>(element);
 		LinearNode<E> previous = getLinearNode(index - 1);
+		LinearNode<E> current = getLinearNode(index);
 
-		temp.setNext(previous.getNext()); // point the next of the new node to the next node 
-		previous.setNext(temp); // point the next of the previous node to the new node
-
+		if(previous != null) {
+			temp.setNext(current); // point the next of the new node to the next node 
+			previous.setNext(temp); // point the next of the previous node to the new node
+	    }
 		count++;
 		modCount++;		
 	}
@@ -114,10 +116,12 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 		if(index < 0 || index >= count) { throw new IndexOutOfBoundsException(); }
 		LinearNode<E> temp = new LinearNode<>(element);
 		LinearNode<E> previous = getLinearNode(index - 1);
-
-		temp.setNext(previous.getNext().getNext()); // point the next of the new node to the next node 
-		previous.setNext(temp); // point the next of the previous node to the new node
-
+		LinearNode<E> following = getLinearNode(index + 1);
+		if(previous != null) {
+			temp.setNext(following); // point the next of the new node to the next node 
+			previous.setNext(temp); // point the next of the previous node to the new node
+		}
+		
 		modCount++;		
 	}
 
@@ -159,7 +163,7 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 				return current;
 			}
 		}
-		throw new NoSuchElementException();
+		return null;
 	}
 
 	private LinearNode<E> getLinearNode(int index) {
@@ -169,16 +173,12 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 			current = current.getNext();
 		}
 
-		if(current.getElement() == null) {
-			throw new NoSuchElementException();
-		} else {
-			return current;
-		}
+		return current;
 	}
 
 	@Override
 	public E first() {
-		if (isEmpty() || front == null) { throw new NoSuchElementException(); } //TODO fix
+		if (isEmpty()) { throw new NoSuchElementException(); } //TODO fix
 		return front.getElement();
 	}
 
