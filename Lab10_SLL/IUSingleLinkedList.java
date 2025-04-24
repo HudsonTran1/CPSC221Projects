@@ -13,6 +13,7 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 	private LinearNode<E> front, rear;
 	private int count;
 	private int modCount;
+	private static final int NOT_FOUND = -1;
 	
 	/** Creates an empty list */
 	public IUSingleLinkedList() {
@@ -23,51 +24,67 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 
 	@Override
 	public void addToFront(E element) {
-		// TODO 
-		
+		add(0, element);
 	}
 
 	@Override
 	public void addToRear(E element) {
-		// TODO 
-		
+		add(count, element);
 	}
 
 	@Override
 	public void add(E element) {
-		// TODO 
-		
+		add(count, element);
 	}
 
 	@Override
 	public void addAfter(E element, E target) {
-		// TODO 
-		
+		int index = indexOf(target);
+		if(index == NOT_FOUND) { throw new NoSuchElementException(); }
+		add(index + 1, element);		
 	}
 
 	@Override
 	public void add(int index, E element) {
-		// TODO 
+		if(index < 0 || index > count) { throw new IndexOutOfBoundsException(); } // guard for indices out of bounds
 		
+		LinearNode<E> temp = new LinearNode<>(element); // new node to add
+		LinearNode<E> previous = getLinearNode(index - 1); // node preceding
+		LinearNode<E> current = getLinearNode(index); // node originally at the index
+
+		temp.setNext(current); // point the next of the new node to the next node 
+		
+		// correct front reference or set previous of new node
+		if(index == 0) {
+			front = temp; // set front to new node
+	    } else {
+			previous.setNext(temp); // point the next of the previous node to the new node
+		}
+		// set rear to new node if applicable
+		if(index == count) {
+			rear = temp;
+		}
+
+		temp = null; // null out temp
+		count++;
+		modCount++;		
 	}
 
 	@Override
 	public E removeFirst() {
-		// TODO 
-		return null;
+		if(isEmpty()) { throw new NoSuchElementException(); } // guard for empty list
+		return removeElement(null, front);
 	}
 
 	@Override
 	public E removeLast() {
-		// TODO 
-		return null;
+		if (isEmpty()) { throw new NoSuchElementException(); } // guard for empty list
+		return removeElement(getLinearNode(count - 2), rear); // previous here is one node before the last, which would be at [count-1]
 	}
 
 	@Override
 	public E remove(E element) {
-		if (isEmpty()) {
-			throw new NoSuchElementException();
-		}
+		if (isEmpty()) { throw new NoSuchElementException(); } // guard for empty list
 		LinearNode<E> current = front, previous = null;
 		while (current != null && !current.getElement().equals(element)) {
 			previous = current;
@@ -77,67 +94,144 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 		if (current == null) {
 			throw new NoSuchElementException();
 		}
+
 		return removeElement(previous, current);		
 	}
 
 	@Override
 	public E remove(int index) {
-		// TODO 
-		return null;
+		return remove(get(index)); // remove element found with get()
 	}
 
 	@Override
 	public void set(int index, E element) {
-		// TODO 
+		if(index < 0 || index >= count) { throw new IndexOutOfBoundsException(); } // guard for indices out of bounds
+
+		LinearNode<E> temp = new LinearNode<>(element); // new node to add
+		LinearNode<E> previous = getLinearNode(index - 1); // node preceding 
+		LinearNode<E> following = getLinearNode(index + 1); // node following
+
+		temp.setNext(following); // point the next of the new node to the following node 
+
+		// correct front reference or set previous of new node
+		if(index == 0) {
+			front = temp; // set front to new node
+	    } else {
+			previous.setNext(temp); // point the next of the previous node to the new node
+		}
+		// set rear to new node if applicable
+		if(index == (count - 1)) {
+			rear = temp;
+		}
 		
+		temp = null; // null out temp
+		modCount++;		
 	}
 
 	@Override
 	public E get(int index) {
-		// TODO 
-		return null;
+		if(index < 0 || index >= count) { throw new IndexOutOfBoundsException(); } // guard for indices out of bounds
+		LinearNode<E> current = front; // node to walk through the linked structure
+
+		// bump current to the next node until node at index is reached
+		for (int i = 0; i < index; i++) {
+			current = current.getNext();
+		}
+		
+		return current.getElement(); // return the element from the appropriate node
 	}
 
 	@Override
 	public int indexOf(E element) {
-		// TODO 
-		return 0;
+		LinearNode<E> current = front; // node to walk through the linked structure
+		
+		// check each node for the element
+		for(int i = 0; current != null; i++) {
+			if (current.getElement().equals(element)) {
+				return i; // return the index of the node
+			}
+			current = current.getNext(); // bump to next node
+		}
+		return NOT_FOUND; // return constant to denote that the element was not found
+	}
+
+	// support method to find node with target element -- prevents unnecessary call into indexOf which is insignificantly more efficient but makes me happy
+	private LinearNode<E> getLinearNode(E target) {
+		LinearNode<E> current = front; // node to walk through the linked structure
+		
+		// check each node for the element
+		while(current != null) {
+			if (current.getElement().equals(target)) {
+				return current; // return the node containing the element
+			}
+		}
+		return null; // return null if no node possesses the element
+	}
+
+	// support method to find node at index 
+	private LinearNode<E> getLinearNode(int index) {
+		if(index < 0 || index >= count) { return null; } // guard for invalid indices
+		LinearNode<E> current = front; // node to walk through the linked structure
+		
+		// bump current to the next node until index is reached
+		for (int i = 0; i < index; i++) {
+			current = current.getNext(); // bump to next node
+		}
+
+		return current; // return the node at the index
 	}
 
 	@Override
 	public E first() {
-		// TODO 
-		return null;
+		if (isEmpty()) { throw new NoSuchElementException(); } // guard for empty list
+		return front.getElement();
 	}
 
 	@Override
 	public E last() {
-		// TODO 
-		return null;
+		if (isEmpty()) { throw new NoSuchElementException(); } // guard for empty list
+		return rear.getElement();
 	}
 
-	@Override
+	@Override 
 	public boolean contains(E target) {
-		// TODO 
+		if(isEmpty()) { return false; } // return early if list is empty
+		LinearNode<E> current = front; // node to walk through the linked structure
+		
+		// bump current to next node until node with element is located
+		while(current != null) {
+			// check if node contains element
+			if(current.getElement().equals(target)) {
+				return true;
+			}
+			current = current.getNext(); // bump to next node
+		}
 		return false;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO 
-		return false;
+		return (count == 0); // check if list is empty
 	}
 
 	@Override
 	public int size() {
-		// TODO 
-		return 0;
+		return count; // return the size
 	}
 
 	@Override
 	public String toString() {
-		// TODO
-		return "";
+		String result = "[";
+		LinearNode<E> current = front;
+		while(current != null) {
+			result += current.getElement();
+			current = current.getNext();
+			if(current != null) {
+				result += ", ";
+			}
+		}
+		result += "]";
+		return result;
 	}
 
 	private E removeElement(LinearNode<E> previous, LinearNode<E> current) {
