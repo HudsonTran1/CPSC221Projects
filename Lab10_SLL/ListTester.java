@@ -19,7 +19,7 @@ public class ListTester {
 		goodList, badList, arrayList, singleLinkedList, doubleLinkedList
 	};
 	// TODO: THIS IS WHERE YOU CHOOSE WHICH LIST TO TEST
-	private final static ListToUse LIST_TO_USE = ListToUse.arrayList;
+	private final static ListToUse LIST_TO_USE = ListToUse.singleLinkedList;
 
 	// possible results expected in tests
 	private enum Result {
@@ -190,7 +190,7 @@ public class ListTester {
 			// Scenario: 15
 		testEmptyList(A_removeIndex0_emptyList, "A_removeIndex0_emptyList");
 			// Scenario: 44
-
+		testEmptyList(A_iterNextRemove_emptyList, "A_iterNextRemove_emptyList");
 
 		//1-element to 2-element
 			// Scenario: 06
@@ -224,7 +224,7 @@ public class ListTester {
 			// Scenario: 30
 
 			// Scenario: 45
-
+		testSingleElementList(AB_iterNextRemove_B, "AB_iterNextRemove_B", LIST_B, STRING_B);
 			// Scenario: 46
 
 			
@@ -273,7 +273,7 @@ public class ListTester {
 
 
 		//Iterator concurrency tests
-		// test_IterConcurrency();
+		test_IterConcurrency();
 		if (SUPPORTS_LIST_ITERATOR) {
 			test_ListIterConcurrency();
 		}
@@ -528,12 +528,28 @@ public class ListTester {
 	/** Scenario #44: [A] -> iterator, next(), remove() -> []
 	 * @return [] after iterator, next(), remove()
 	 */
+	private IndexedUnsortedList<Integer> A_iterNextRemove_emptyList() {
+		IndexedUnsortedList<Integer> list = emptyList_addToFrontA_A();
+		Iterator<Integer> it = list.iterator();
+		it.next();
+		it.remove();
+		return list;
+	}
+	private Scenario<Integer> A_iterNextRemove_emptyList = () -> A_iterNextRemove_emptyList();
 
 	 
 	/** Scenario #45: [A,B] -> iterator, next(), remove() -> [B]
 	 * @return [B] after iterator, next(), remove()
 	 */
-
+	private IndexedUnsortedList<Integer> AB_iterNextRemove_B() {
+		IndexedUnsortedList<Integer> list = A_addToRearB_AB();
+		Iterator<Integer> it = list.iterator();
+		it.next();
+		it.remove();
+		return list;
+	}
+	private Scenario<Integer> AB_iterNextRemove_B = () -> AB_iterNextRemove_B();
+	
 	 
 	/** Scenario #46: [A,B] -> iterator, next(), next(), remove() -> [A]
 	 * @return [A] after iterator, next(), next(), remove()
