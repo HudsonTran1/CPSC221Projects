@@ -13,6 +13,7 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 	private LinearNode<E> front, rear;
 	private int count;
 	private int modCount;
+	private int iterModCount;
 	private static final int NOT_FOUND = -1;
 	
 	/** Creates an empty list */
@@ -20,6 +21,7 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 		front = rear = null;
 		count = 0;
 		modCount = 0;
+		iterModCount = 0;
 	}
 
 	@Override
@@ -264,7 +266,7 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 		private LinearNode<E> current;
 		private LinearNode<E> next;
 		private int iterModCount;
-		boolean nextCalled;
+		boolean canRemove;
 		
 		/** Creates a new iterator for the list */
 		public SLLIterator() {
@@ -272,7 +274,7 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 			current = null;
 			next = front;
 			iterModCount = modCount;
-			nextCalled = false;
+			canRemove = false;
 		}
 
 		@Override
@@ -296,23 +298,25 @@ public class IUSingleLinkedList<E> implements IndexedUnsortedList<E> {
 			previous = current;
 			current = next;
 			next = next.getNext();
-			nextCalled = true;
+			canRemove = true;
 
 			return current.getElement();
 		}
 		
 		@Override
 		public void remove() {
-			if(interModCount != modCount){
-				throw new ConcurrentMOdificationException();
+			if(iterModCount != modCount){
+				throw new ConcurrentModificationException();
 			}
-			if(!nextCalled){
+			
+			if(!canRemove){
 				throw new IllegalStateException();
 			}
 
-			removeNode(current, previous);
-			interModCount++;
-			nextCalled = false;
+			removeElement(previous, current);
+			current = previous; //to account for the shift
+			iterModCount++;
+			canRemove = false; 
 		}
 	}
 

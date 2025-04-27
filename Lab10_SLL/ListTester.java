@@ -225,7 +225,7 @@ public class ListTester {
 			// Scenario: 45
 		testSingleElementList(AB_iterNextRemove_B, "AB_iterNextRemove_B", LIST_B, STRING_B);
 			// Scenario: 46
-		testSingleElementList(AB_iterNextNextRemove_A, "AB_iterNextNextRemove_A", LIST_B, STRING_B);
+		testSingleElementList(AB_iterNextNextRemove_A, "AB_iterNextNextRemove_A", LIST_A, STRING_A);
 			
 		//2-element to 3-element
 			// Scenario: 17
@@ -244,13 +244,13 @@ public class ListTester {
 			
 		//3-element to 1-element
 			// Scenario: 51
-		testSingleElementList(ABC_iterNextRemoveNextRemove_C, "ABC_iterNextRemoveNextRemove_C", LIST_ABC, STRING_ABC);
+		testSingleElementList(ABC_iterNextRemoveNextRemove_C, "ABC_iterNextRemoveNextRemove_C", LIST_C, STRING_C);
 
 			// Scenario: 52
-		testSingleElementList(ABC_iterNextRemoveNextNextRemove_B, "ABC_iterNextRemoveNextNextRemove_B", LIST_ABC, STRING_ABC);
+		testSingleElementList(ABC_iterNextRemoveNextNextRemove_B, "ABC_iterNextRemoveNextNextRemove_B", LIST_B, STRING_B);
 
 			// Scenario: 53
-		testSingleElementList(ABC_iterNextNextRemoveNextRemove_A, "ABC_iterNextNextRemoveNextRemove_A", LIST_ABC, STRING_ABC);
+		testSingleElementList(ABC_iterNextNextRemoveNextRemove_A, "ABC_iterNextNextRemoveNextRemove_A", LIST_A, STRING_A);
 
 		//3-element to 2-element
 			// Scenario: 33
@@ -260,13 +260,13 @@ public class ListTester {
 			// Scenario: 39
 		testTwoElementList(ABC_removeAtIndex1_AC, "ABC_removeAtIndex1_AC", LIST_AC, STRING_AC);
 			// Scenario: 48
-		testTwoElementList(ABC_iterNextRemove_BC, "ABC_iterNextRemove_BC", LIST_ABC, STRING_ABC);
+		testTwoElementList(ABC_iterNextRemove_BC, "ABC_iterNextRemove_BC", LIST_BC, STRING_BC);
 
 			// Scenario: 49
-		testTwoElementList(ABC_iterNextNextRemove_AC, "ABC_iterNextNextRemove_AC", LIST_ABC, STRING_ABC);
+		testTwoElementList(ABC_iterNextNextRemove_AC, "ABC_iterNextNextRemove_AC", LIST_AC, STRING_AC);
 
 			// Scenario: 50
-		testTwoElementList(ABC_iterNextNextNextRemove_AB, "ABC_iterNextNextNextRemove_AB", LIST_ABC, STRING_ABC);
+		testTwoElementList(ABC_iterNextNextNextRemove_AB, "ABC_iterNextNextNextRemove_AB", LIST_AB, STRING_AB);
 			
 		//3-element to changed 3-element via set()
 
@@ -978,7 +978,7 @@ public class ListTester {
 			printTest(scenarioName + "_testToString", testToString(scenario.build(), Result.ValidString));
 			// Iterator
 				// test to construct iterator
-			printTest(scenarioName + "_testIter", testIter(scenario.build()), Result.NoException);
+			printTest(scenarioName + "_testIter", testIter(scenario.build(), Result.NoException));
 				// tests after getting iterator	
 			printTest(scenarioName + "_TestIterHasNext", testIterHasNext(WrapIt.prep(scenario.build()).getIterator(), Result.True));
 			printTest(scenarioName + "_testIterNext", testIterNext(WrapIt.prep(scenario.build()).getIterator(), contents[0], Result.MatchingValue));
@@ -1078,7 +1078,7 @@ public class ListTester {
 			
 			// Iterator
 				// test to construct iterator
-			printTest(scenarioName + "_testIter", testIter(scenario.build()), Result.NoException);
+			printTest(scenarioName + "_testIter", testIter(scenario.build(), Result.NoException));
 				// tests after getting iterator	
 			printTest(scenarioName + "_TestIterHasNext", testIterHasNext(WrapIt.prep(scenario.build()).getIterator(), Result.True));
 			printTest(scenarioName + "_testIterNext", testIterNext(WrapIt.prep(scenario.build()).getIterator(), contents[0], Result.MatchingValue));
