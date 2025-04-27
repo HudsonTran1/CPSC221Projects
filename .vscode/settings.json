@@ -1,6 +1,8 @@
 {
     "java.project.sourcePaths": [
-        "Lab09_ArrayList",
-        "Lab07_Lists_Pt1"
-    ]
+        "Lab10_SLL",
+        "Lab07_Lists_Pt1",
+        "Lab10_SLL"
+    ],
+    "java.project.referencedLibraries": []
 }
