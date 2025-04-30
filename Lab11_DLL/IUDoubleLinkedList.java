@@ -109,16 +109,15 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 		if(index < 0 || index >= count) { throw new IndexOutOfBoundsException(); } // guard for indices out of bounds
 
 		BidirectionalNode<E> temp = new BidirectionalNode<>(element); // new node to add
-		BidirectionalNode<E> previous = getBidirectionalNode(index - 1); // node preceding 
-		BidirectionalNode<E> following = getBidirectionalNode(index + 1); // node following
+		BidirectionalNode<E> current = getBidirectionalNode(index); // node preceding 
 
-		temp.setNext(following); // point the next of the new node to the following node 
+		temp.setNext(current.getNext()); // point the next of the new node to the following node 
 
 		// correct front reference or set previous of new node
 		if(index == 0) {
 			front = temp; // set front to new node
 	    } else {
-			previous.setNext(temp); // point the next of the previous node to the new node
+			current.getPrevious().setNext(temp); // point the next of the previous node to the new node
 		}
 		// set rear to new node if applicable
 		if(index == (count - 1)) {
@@ -250,17 +249,13 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 	}
 
     private class DLLIterator implements Iterator<E> {
-        private BidirectionalNode<E> previous;
 		private BidirectionalNode<E> current;
-		private BidirectionalNode<E> next;
 		private int iterModCount;
 		boolean canRemove;
 		
 		/** Creates a new iterator for the list */
 		public DLLIterator() {
-			previous = null;
 			current = null;
-			next = front;
 			iterModCount = modCount;
 			canRemove = false;
 		}
@@ -270,7 +265,7 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 			if(iterModCount != modCount){
 				throw new ConcurrentModificationException();
 			}
-			return next != null;
+			return current.getNext() != null;
 		}
 
 		@Override
@@ -279,13 +274,11 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 				throw new ConcurrentModificationException();
 			}
 
-			if(next == null){
+			if(current.getNext() == null){
 				throw new NoSuchElementException();
 			}
 
-			previous = current;
-			current = next;
-			next = next.getNext();
+			current = current.getNext();
 			canRemove = true;
 
 			return current.getElement();
@@ -302,7 +295,7 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 			}
 
 			removeElement(current);
-			current = previous; //to account for the shift
+			current = current.getPrevious(); //to account for the shift
 			iterModCount++;
 			canRemove = false; 
 		}
