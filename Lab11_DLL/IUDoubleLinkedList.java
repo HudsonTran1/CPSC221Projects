@@ -34,19 +34,23 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         if(index < 0 || index > count) { throw new IndexOutOfBoundsException(); } // guard for indices out of bounds
 		
 		BidirectionalNode<E> temp = new BidirectionalNode<>(element); // new node to add
+		BidirectionalNode<E> previous = getBidirectionalNode(index - 1); // node before
 		BidirectionalNode<E> current = getBidirectionalNode(index); // node originally at the index
 
-		temp.setNext(current); // point the next of the new node to the next node 
-		
+		temp.setNext(current); // point the next of the new node to the next node
+		temp.setPrevious(previous); // set previous of new node
+
 		// correct front reference or set previous of new node
-		if(index == 0) {
+		if(index == 0) { // if at front
 			front = temp; // set front to new node
-	    } else {
-			current.getPrevious().setNext(temp); // point the next of the previous node to the new node
+	    } else { // if not front
+			previous.setNext(temp); // point the next of the previous node to the new node
 		}
 		// set rear to new node if applicable
-		if(index == count) {
-			rear = temp;
+		if(index == count) { // if at rear
+			rear = temp; // set rear
+		} else {
+			current.setPrevious(temp);
 		}
 
 		temp = null; // null out temp
@@ -86,47 +90,36 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 		return remove(get(index)); // remove element found with get()
 	}
 
-    private E removeElement(BidirectionalNode<E> current) {
-		// Grab element
-		E result = current.getElement();
-		// If not the first element in the list
-		if (current.getPrevious() != null) {
-			current.getPrevious().setNext(current.getNext());
-		} else { // If the first element in the list
-			front = current.getNext();
-		}
-		// If the last element in the list
-		if (current.getNext() == null) {
-			rear = current.getPrevious();
-		}
-		count--;
-		modCount++;
-
-		return result;
-	}
-    @Override
+	@Override
 	public void set(int index, E element) {
 		if(index < 0 || index >= count) { throw new IndexOutOfBoundsException(); } // guard for indices out of bounds
 
 		BidirectionalNode<E> temp = new BidirectionalNode<>(element); // new node to add
-		BidirectionalNode<E> current = getBidirectionalNode(index); // node preceding 
+		BidirectionalNode<E> previous = getBidirectionalNode(index - 1); // node preceding 
+		BidirectionalNode<E> following = getBidirectionalNode(index + 1);
 
-		temp.setNext(current.getNext()); // point the next of the new node to the following node 
+		temp.setNext(following); // point the next of the new node to the following node 
+		temp.setPrevious(previous); // set the preious of the new node
 
 		// correct front reference or set previous of new node
 		if(index == 0) {
 			front = temp; // set front to new node
 	    } else {
-			current.getPrevious().setNext(temp); // point the next of the previous node to the new node
+			previous.setNext(temp); // point the next of the previous node to the new node
 		}
 		// set rear to new node if applicable
 		if(index == (count - 1)) {
 			rear = temp;
+		} else {
+			following.setPrevious(temp); // set following's previous
 		}
 		
 		temp = null; // null out temp
 		modCount++;		
 	}
+
+   
+    
 
 	@Override
 	public E get(int index) {
@@ -208,6 +201,29 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 		result += "]";
 		return result;
 	}
+	
+	private E removeElement(BidirectionalNode<E> current) {
+		// Grab element
+		E result = current.getElement();
+		BidirectionalNode<E> previous = current.getPrevious();
+		BidirectionalNode<E> following = current.getNext();
+		// If not the first element in the list
+		if (previous == null) {
+			front = following;			
+		} else { // If the first element in the list
+			previous.setNext(following);
+		}
+		// If the last element in the list
+		if (following == null) {
+			rear = previous;
+		} else {
+			following.setPrevious(previous);
+		}
+		count--;
+		modCount++;
+
+		return result;
+	}
 
     @Override
     public Iterator<E> iterator() {
@@ -231,31 +247,62 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 		if(index < 0 || index >= count) { return null; } // guard for invalid indices
 		// logic to start at the beginning or end of the list, whichever is more efficient
         BidirectionalNode<E> current; // node to walk through the linked structure
-        if(index <= count/2) { // if index is close to the start            
-            current = front; // start at front
-            // bump current to the next node until index is reached
-            for (int i = 0; i < index; i++) {
-                current = current.getNext(); // bump to next node
-		    }
-        } else { // if index is not close to the start
-            current = rear; // start at rear
-            // bump current to the next node until index is reached
-            for (int i = count; i > index; i--) {
-                current = current.getPrevious(); // bump to next node
-		    }
-        }
+       
+		// if(index <= count/2) { // if index is close to the start            
+        //     current = front; // start at front
+        //     // bump current to the next node until index is reached
+        //     for (int i = 0; i < index; i++) {
+        //         current = current.getNext(); // bump to next node
+		//     }
+        // } else { // if index is not close to the start
+        //     current = rear; // start at rear
+        //     // bump current to the next node until index is reached
+        //     for (int i = count; i > index; i--) {
+        //         current = current.getPrevious(); // bump to next node
+		//     }
+        // }
+		current = front; // start at front
+		// bump current to the next node until index is reached
+		for (int i = 0; i < index; i++) {
+			current = current.getNext(); // bump to next node
+		}
 
 		return current; // return the node at the index
 	}
 
-    private class DLLIterator implements Iterator<E> {
+	//private support method to easily return previous node or null
+	private BidirectionalNode<E> getPreceding(BidirectionalNode<E> current, int index) { 
+		BidirectionalNode<E> result;
+		try {
+			result = current.getPrevious();
+		} catch (Exception e) {
+			result = getBidirectionalNode(index-1);
+		}
+		return result;
+	}
+	//private support method to easily return next node or null
+	private BidirectionalNode<E> getFollowing(BidirectionalNode<E> current, int index) { 
+		BidirectionalNode<E> result;
+		try {
+			result = current.getNext();
+		} catch (Exception e) {
+			result = getBidirectionalNode(index+1);
+		}
+		return result;
+	}
+
+	private class DLLIterator implements Iterator<E> {
+		private BidirectionalNode<E> previous;
 		private BidirectionalNode<E> current;
+		private BidirectionalNode<E> next;
 		private int iterModCount;
 		boolean canRemove;
 		
 		/** Creates a new iterator for the list */
 		public DLLIterator() {
+			previous = null;
 			current = null;
+			next = front;
 			iterModCount = modCount;
 			canRemove = false;
 		}
@@ -265,7 +312,7 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 			if(iterModCount != modCount){
 				throw new ConcurrentModificationException();
 			}
-			return current.getNext() != null;
+			return next != null;
 		}
 
 		@Override
@@ -274,11 +321,13 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 				throw new ConcurrentModificationException();
 			}
 
-			if(current.getNext() == null){
+			if(next == null){
 				throw new NoSuchElementException();
 			}
 
-			current = current.getNext();
+			previous = current;
+			current = next;
+			next = next.getNext();
 			canRemove = true;
 
 			return current.getElement();
@@ -295,7 +344,7 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 			}
 
 			removeElement(current);
-			current = current.getPrevious(); //to account for the shift
+			current = previous; //to account for the shift
 			iterModCount++;
 			canRemove = false; 
 		}
