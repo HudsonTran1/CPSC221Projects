@@ -34,10 +34,10 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         if(index < 0 || index > count) { throw new IndexOutOfBoundsException(); } // guard for indices out of bounds
 		
 		BidirectionalNode<E> temp = new BidirectionalNode<>(element); // new node to add
-		BidirectionalNode<E> previous = getBidirectionalNode(index - 1); // node before
 		BidirectionalNode<E> current = getBidirectionalNode(index); // node originally at the index
-
-		temp.setNext(current); // point the next of the new node to the next node
+		BidirectionalNode<E> previous = getPreceding(current, index); // node preceding current
+		
+		temp.setNext(current); // set next of new node
 		temp.setPrevious(previous); // set previous of new node
 
 		// correct front reference or set previous of new node
@@ -49,8 +49,8 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 		// set rear to new node if applicable
 		if(index == count) { // if at rear
 			rear = temp; // set rear
-		} else {
-			current.setPrevious(temp);
+		} else { // if not at rear
+			current.setPrevious(temp); // set previous of current to new node
 		}
 
 		temp = null; // null out temp
@@ -95,8 +95,9 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 		if(index < 0 || index >= count) { throw new IndexOutOfBoundsException(); } // guard for indices out of bounds
 
 		BidirectionalNode<E> temp = new BidirectionalNode<>(element); // new node to add
-		BidirectionalNode<E> previous = getBidirectionalNode(index - 1); // node preceding 
-		BidirectionalNode<E> following = getBidirectionalNode(index + 1);
+		BidirectionalNode<E> current = getBidirectionalNode(index); // current node
+		BidirectionalNode<E> previous = getPreceding(current, index);
+		BidirectionalNode<E> following = getFollowing(current, index);
 
 		temp.setNext(following); // point the next of the new node to the following node 
 		temp.setPrevious(previous); // set the preious of the new node
@@ -117,9 +118,6 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 		temp = null; // null out temp
 		modCount++;		
 	}
-
-   
-    
 
 	@Override
 	public E get(int index) {
@@ -248,24 +246,25 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 		// logic to start at the beginning or end of the list, whichever is more efficient
         BidirectionalNode<E> current; // node to walk through the linked structure
        
-		// if(index <= count/2) { // if index is close to the start            
-        //     current = front; // start at front
-        //     // bump current to the next node until index is reached
-        //     for (int i = 0; i < index; i++) {
-        //         current = current.getNext(); // bump to next node
-		//     }
-        // } else { // if index is not close to the start
-        //     current = rear; // start at rear
-        //     // bump current to the next node until index is reached
-        //     for (int i = count; i > index; i--) {
-        //         current = current.getPrevious(); // bump to next node
-		//     }
-        // }
-		current = front; // start at front
-		// bump current to the next node until index is reached
-		for (int i = 0; i < index; i++) {
-			current = current.getNext(); // bump to next node
-		}
+		if(index <= count/2) { // if index is close to the start            
+            current = front; // start at front
+            // bump current to the next node until index is reached
+            for (int i = 0; i < index; i++) {
+                current = current.getNext(); // bump to next node
+		    }
+        } else { // if index is not close to the start
+            current = rear; // start at rear
+            // bump current to the next node until index is reached
+            for (int i = count; i > index; i--) {
+                current = current.getPrevious(); // bump to next node
+		    }
+        }
+		// Unused:
+		// current = front; // start at front
+		// // bump current to the next node until index is reached
+		// for (int i = 0; i < index; i++) {
+		// 	current = current.getNext(); // bump to next node
+		// }
 
 		return current; // return the node at the index
 	}
