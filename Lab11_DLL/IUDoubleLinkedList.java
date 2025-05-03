@@ -228,12 +228,12 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         return new DLLIterator();
     }
 
-    public ListIterator listIterator() {
+    public ListIterator<E> listIterator() {
         return new DLLListIterator(0);
     }
 
     @Override
-    public ListIterator listIterator(int startingIndex) {
+    public ListIterator<E> listIterator(int startingIndex) {
         return new DLLListIterator(startingIndex);
     }
       // support method to find node at index 
@@ -291,8 +291,10 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         int nextIndex;
         int interModCount;
         boolean removeCalled, addCalled;
+		ListIteratorState state = ListIteratorState.NONE;
 
-        DLLListIterator(int index){
+		DLLListIterator(int index){
+			if(index < 0 || index > count) { throw new IndexOutOfBoundsException();}
             if(index == count){
                 next = null;
             }
@@ -306,7 +308,7 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 
         }
 
-        private void  checkForModification(){
+        private void checkForModification(){
             if(interModCount != modCount){
                 throw new ConcurrentModificationException();
             }
@@ -315,7 +317,7 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         @Override
         public boolean hasNext() {
             checkForModification();
-            return nextIndex < count;
+            return (nextIndex < count) & (nextIndex >= 0);
         }
 
         @Override
@@ -336,7 +338,7 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         @Override
         public boolean hasPrevious() {
             checkForModification();
-            return nextIndex > 0;
+            return (nextIndex > 0) && (nextIndex <= count);
         }
 
         @Override
@@ -350,11 +352,11 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
                 current = next = rear;
             }
             else{
-                current = next = next.getPrevious();
+          		current = next = next.getPrevious();
             }
+			
             nextIndex--;
-            removeCalled = addCalled = false;
-
+            removeCalled = false;
             return current.getElement();
         }
 
@@ -373,11 +375,11 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         @Override
         public void remove() {
             checkForModification();
-            if(current == null || addCalled){
+            if(current == null || removeCalled){
                 throw new IllegalStateException();
             }
-
-            removeElement(current);
+			removeElement(current);
+			current = null;
             iterModCount++;
             removeCalled = true;
             current = null;
@@ -386,27 +388,18 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         @Override
         public void set(E e) {
             checkForModification();
-            if(current == null || addCalled || removeCalled){
+            if(current == null || removeCalled){
                 throw new IllegalStateException();
             }
             current.setElement(e);
+			current = null;
         }
 
         @Override
         public void add(E e) {
             checkForModification();
-            if(next==null){
-                addToRear(e);
-                current = rear.getPrevious();
-            }
-            else{ 
-                next.setElement(e);
-                current = next.getPrevious();
-            }
-            
-            nextIndex++;
+            IUDoubleLinkedList.this.add(nextIndex, e);
             interModCount++;
-            addCalled = true;
         } 
     }
 
@@ -467,6 +460,12 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 			iterModCount++;
 			canRemove = false; 
 		}
+	}
+
+	private enum ListIteratorState {
+		NONE,
+		PREVIOUS,
+		NEXT
 	}
 
 }
