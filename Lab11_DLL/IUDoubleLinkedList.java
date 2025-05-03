@@ -308,7 +308,7 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 
         }
 
-        private void  checkForModification(){
+        private void checkForModification(){
             if(interModCount != modCount){
                 throw new ConcurrentModificationException();
             }
@@ -317,7 +317,7 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         @Override
         public boolean hasNext() {
             checkForModification();
-            return nextIndex < count;
+            return (nextIndex < count) & (nextIndex >= 0);
         }
 
         @Override
@@ -338,7 +338,7 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         @Override
         public boolean hasPrevious() {
             checkForModification();
-            return nextIndex > 0;
+            return (nextIndex > 0) && (nextIndex <= count);
         }
 
         @Override
@@ -348,19 +348,15 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
                 throw new NoSuchElementException();
             }
 
-			current = getPreceding(current, nextIndex);
-
             if(next == null){
-                next = rear;
+                current = next = rear;
             }
             else{
-          		next = next.getPrevious();
+          		current = next = next.getPrevious();
             }
 			
             nextIndex--;
-            removeCalled = addCalled = false;
-			state = ListIteratorState.PREVIOUS;
-
+            removeCalled = false;
             return current.getElement();
         }
 
@@ -379,11 +375,11 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         @Override
         public void remove() {
             checkForModification();
-            if(current == null || addCalled){
+            if(current == null || removeCalled){
                 throw new IllegalStateException();
             }
-
-            removeElement(current);
+			removeElement(current);
+			current = null;
             iterModCount++;
             removeCalled = true;
             current = null;
@@ -392,11 +388,11 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         @Override
         public void set(E e) {
             checkForModification();
-            if(current == null){
+            if(current == null || removeCalled){
                 throw new IllegalStateException();
             }
             current.setElement(e);
-			interModCount++;
+			current = null;
         }
 
         @Override
