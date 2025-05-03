@@ -228,12 +228,12 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         return new DLLIterator();
     }
 
-    public ListIterator listIterator() {
+    public ListIterator<E> listIterator() {
         return new DLLListIterator(0);
     }
 
     @Override
-    public ListIterator listIterator(int startingIndex) {
+    public ListIterator<E> listIterator(int startingIndex) {
         return new DLLListIterator(startingIndex);
     }
       // support method to find node at index 
@@ -291,8 +291,10 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         int nextIndex;
         int interModCount;
         boolean removeCalled, addCalled;
+		ListIteratorState state = ListIteratorState.NONE;
 
-        DLLListIterator(int index){
+		DLLListIterator(int index){
+			if(index < 0 || index > count) { throw new IndexOutOfBoundsException();}
             if(index == count){
                 next = null;
             }
@@ -346,14 +348,18 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
                 throw new NoSuchElementException();
             }
 
+			current = getPreceding(current, nextIndex);
+
             if(next == null){
-                current = next = rear;
+                next = rear;
             }
             else{
-                current = next = next.getPrevious();
+          		next = next.getPrevious();
             }
+			
             nextIndex--;
             removeCalled = addCalled = false;
+			state = ListIteratorState.PREVIOUS;
 
             return current.getElement();
         }
@@ -386,27 +392,18 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         @Override
         public void set(E e) {
             checkForModification();
-            if(current == null || addCalled || removeCalled){
+            if(current == null){
                 throw new IllegalStateException();
             }
             current.setElement(e);
+			interModCount++;
         }
 
         @Override
         public void add(E e) {
             checkForModification();
-            if(next==null){
-                addToRear(e);
-                current = rear.getPrevious();
-            }
-            else{ 
-                next.setElement(e);
-                current = next.getPrevious();
-            }
-            
-            nextIndex++;
+            IUDoubleLinkedList.this.add(nextIndex, e);
             interModCount++;
-            addCalled = true;
         } 
     }
 
@@ -467,6 +464,12 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 			iterModCount++;
 			canRemove = false; 
 		}
+	}
+
+	private enum ListIteratorState {
+		NONE,
+		PREVIOUS,
+		NEXT
 	}
 
 }
