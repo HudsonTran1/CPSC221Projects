@@ -273,6 +273,18 @@ public class ListTester {
 		//List Iterator Scenarios
 		if (SUPPORTS_LIST_ITERATOR) {
 			// Place List Iterator Scenarios Here...
+
+			// Scenario 66
+			testSingleElementList(A_iterNextPreviousRemove_A, "A_iterNextPreviousRemove_A", LIST_A, STRING_A);
+
+			// Scenario 71
+			testTwoElementList(AB_iterNextPreviousRemove_BC, "AB_iterNextPreviousRemove_BC", LIST_BC, STRING_BC);
+
+			// Scenario 96
+			testThreeElementList(ABC_iterNextSetD_ABDC, "ABC_iterNextSetD_ABDC", LIST_ABDC, STRING_ABDC);
+
+			// Scenario 99
+			testThreeElementList(ABC_iterNextPreviousSetD_ABDC, "ABC_iterNextPreviousSetD_ABDC", LIST_ABDC, STRING_ABDC);
 		}
 
 
@@ -326,6 +338,19 @@ public class ListTester {
 	//  struggling with it, just make sure each scenario building method has a corresponding Scenario 
 	//  assignment statement as in these examples.
 	private Scenario<Integer> newList = () -> newList();
+
+	// Scenario 66: A -> list-iterator(1), previous(), remove() -> [ ]
+	private Scenario<Integer> A_iterNextPreviousRemove_A = () -> A_iterNextPreviousRemove_A();
+
+	// Scenario 71: [A, B] -> list-iterator(1), previous(), remove() -> [B, C]
+	private Scenario<Integer> AB_iterNextPreviousRemove_BC = () -> AB_iterNextPreviousRemove_BC();
+
+	// Scenario 96: [A, B, C] -> list-iterator(1), next(), set(D) -> [A, D, C]
+	private Scenario<Integer> ABC_iterNextSetD_ABDC = () -> ABC_iterNextSetD_ABDC();
+
+	// Scenario 99: [A, B, C] -> list-iterator(2), previous(), set(D) -> [A, D, C]
+	private Scenario<Integer> ABC_iterNextPreviousSetD_ABDC = () -> ABC_iterNextPreviousSetD_ABDC();
+
 
 	/** Scenario #02: [] -> addToFront(A) -> [A] #6
 	 * @return [A] after addToFront(A)
