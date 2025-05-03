@@ -761,6 +761,46 @@ public class ListTester {
 	}
 	private Scenario<Integer> ABC_iterNextRemoveNextRemoveNextRemove_EMPTY = () -> ABC_iterNextRemoveNextRemoveNextRemove_EMPTY();	
 
+	private IndexedUnsortedList<Integer> A_iterNextPreviousRemove_A() {
+		IndexedUnsortedList<Integer> list = new IUDoubleLinkedList<>();
+		list.add(ELEMENT_A); // [A]
+		ListIterator<Integer> itr = list.listIterator();
+		itr.next();
+		itr.previous();
+		itr.remove(); // []
+		return list;
+	}
+	
+	private IndexedUnsortedList<Integer> AB_iterNextPreviousRemove_BC() {
+		IndexedUnsortedList<Integer> list = new IUDoubleLinkedList<>();
+		list.add(ELEMENT_A); list.add(ELEMENT_B); // [A, B]
+		ListIterator<Integer> itr = list.listIterator();
+		itr.next();
+		itr.previous();
+		itr.remove(); // [B]
+		return list;
+	}
+	
+	private IndexedUnsortedList<Integer> ABC_iterNextSetD_ABDC() {
+		IndexedUnsortedList<Integer> list = new IUDoubleLinkedList<>();
+		list.add(ELEMENT_A); list.add(ELEMENT_B); list.add(ELEMENT_C); // [A, B, C]
+		ListIterator<Integer> itr = list.listIterator();
+		itr.next();
+		itr.set(ELEMENT_D); // [D, B, C]
+		return list;
+	}
+	
+	private IndexedUnsortedList<Integer> ABC_iterNextPreviousSetD_ABDC() {
+		IndexedUnsortedList<Integer> list = new IUDoubleLinkedList<>();
+		list.add(ELEMENT_A); list.add(ELEMENT_B); list.add(ELEMENT_C); // [A, B, C]
+		ListIterator<Integer> itr = list.listIterator();
+		itr.next();
+		itr.previous();
+		itr.set(ELEMENT_D); // [D, B, C]
+		return list;
+	}
+	
+
 	 
 	/////////////////////////////////
 	//XXX Tests for 0-element list
@@ -823,6 +863,11 @@ public class ListTester {
 				// printTest(scenarioName + "_testListIter0PreviousIndex", testListIterPreviousIndex(WrapIt.prep(scenario.build(), 0).getListIterator(), -1, Result.MatchingValue));
 				// printTest(scenarioName + "_testListIter0SetX", testListIterSet(WrapIt.prep(scenario.build(), 0).getListIterator(), ELEMENT_X, Result.IllegalState));
 				// printTest(scenarioName + "_testListIter0Remove", testListIterRemove(WrapIt.prep(scenario.build(), 0).getListIterator(), Result.IllegalState));
+				testEmptyList(A_iterNextPreviousRemove_A, "A_iterNextPreviousRemove_A");
+				testTwoElementList(AB_iterNextPreviousRemove_BC, "AB_iterNextPreviousRemove_BC", LIST_BC, STRING_BC);
+				testThreeElementList(ABC_iterNextSetD_ABDC, "ABC_iterNextSetD_ABDC", LIST_ABDC, STRING_ABDC);
+				testThreeElementList(ABC_iterNextPreviousSetD_ABDC, "ABC_iterNextPreviousSetD_ABDC", LIST_ABDC, STRING_ABDC);
+
 			} else {
 				// printTest(scenarioName + "_testListIter", testListIter(scenario.build(), Result.UnsupportedOperation));
 				// printTest(scenarioName + "_testListIter0", testListIter(scenario.build(), 0, Result.UnsupportedOperation));
