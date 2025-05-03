@@ -273,6 +273,14 @@ public class ListTester {
 		//List Iterator Scenarios
 		if (SUPPORTS_LIST_ITERATOR) {
 			// Place List Iterator Scenarios Here...
+				// Scenario: 57
+			testSingleElementList(AB_listIter1NextRemove_A,"AB_listIter1NextRemove_A",LIST_A, STRING_A);
+				// Scenario: 60
+			testTwoElementList(ABC_listIter1NextRemove_AC, "ABC_listIter1NextRemove_AC", LIST_AC, STRING_AC);
+				// Scenario: 87
+			testThreeElementList(AB_listIter0NextAddC_ACB, "AB_listIter0NextAddC_ACB", LIST_ACB, STRING_ACB);
+				// Scenario: 90
+			testThreeElementList(AB_listIter2PreviousAddC_ACB, "AB_listIter2PreviousAddC_ACB", LIST_ACB, STRING_ACB);
 		}
 
 
@@ -736,7 +744,59 @@ public class ListTester {
 	}
 	private Scenario<Integer> ABC_iterNextRemoveNextRemoveNextRemove_EMPTY = () -> ABC_iterNextRemoveNextRemoveNextRemove_EMPTY();	
 
-	 
+
+	/** Scenario #57: [A,B] -> list-iterator(1), next(), remove() -> [A]
+	 * @return [A] after list-iterator(1), next(), remove()
+	 */
+	private IUDoubleLinkedList<Integer> AB_listIter1NextRemove_A() {
+		IUDoubleLinkedList<Integer> list = (IUDoubleLinkedList<Integer>) A_addToRearB_AB();
+		ListIterator<Integer> listIter = list.listIterator(1);
+		listIter.next();
+		listIter.remove();
+		return list;
+	}
+	private Scenario<Integer> AB_listIter1NextRemove_A = () -> AB_listIter1NextRemove_A();
+
+	
+	/** Scenario #60: [A,B,C] -> list-iterator(1), next(), remove() -> [A,C]
+	 * @return [A,C] after list-iterator(1), next(), remove()
+	 */
+	private IUDoubleLinkedList<Integer> ABC_listIter1NextRemove_AC() {
+		IUDoubleLinkedList<Integer> list = (IUDoubleLinkedList<Integer>) A_addToRearB_AB();
+		list.addToRear(ELEMENT_C);
+		ListIterator<Integer> listIter = list.listIterator(1);
+		listIter.next();
+		listIter.remove();
+		return list;
+	}
+	private Scenario<Integer> ABC_listIter1NextRemove_AC = () -> ABC_listIter1NextRemove_AC();
+
+
+	/** Scenario #87: [A,B] -> list-iterator(0), next(), add(C) -> [A,C,B]
+	 * @return [A,C,B] after list-iterator(0), next(), add(C)
+	 */
+	private IUDoubleLinkedList<Integer> AB_listIter0NextAddC_ACB() {
+		IUDoubleLinkedList<Integer> list = (IUDoubleLinkedList<Integer>) A_addToRearB_AB();
+		ListIterator<Integer> listIter = list.listIterator(0);
+		listIter.next();
+		listIter.add(ELEMENT_C);
+		return list;
+	}
+	private Scenario<Integer> AB_listIter0NextAddC_ACB = () -> AB_listIter0NextAddC_ACB();
+
+	
+	/** Scenario #90: [A,B] -> list-iterator(2), previous(), add(C) -> [A,C,B]
+	 * @return [A,C,B] after list-iterator(2), previous(), add(C)
+	 */
+	private IUDoubleLinkedList<Integer> AB_listIter2PreviousAddC_ACB() {
+		IUDoubleLinkedList<Integer> list = (IUDoubleLinkedList<Integer>) A_addToRearB_AB();
+		ListIterator<Integer> listIter = list.listIterator(2);
+		listIter.previous();
+		listIter.add(ELEMENT_C);
+		return list;
+	}
+	private Scenario<Integer> AB_listIter2PreviousAddC_ACB = () -> AB_listIter2PreviousAddC_ACB();
+	
 	/////////////////////////////////
 	//XXX Tests for 0-element list
 	/////////////////////////////////
