@@ -228,19 +228,15 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         return new DLLIterator();
     }
 
-    @Override
-    public ListIterator<E> listIterator() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'listIterator'");
+    public ListIterator listIterator() {
+        return new DLLListIterator(0);
     }
 
     @Override
-    public ListIterator<E> listIterator(int startingIndex) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'listIterator'");
+    public ListIterator listIterator(int startingIndex) {
+        return new DLLListIterator(startingIndex);
     }
-
-    // support method to find node at index 
+      // support method to find node at index 
 	private BidirectionalNode<E> getBidirectionalNode(int index) {
 		if(index < 0 || index >= count) { return null; } // guard for invalid indices
 		// logic to start at the beginning or end of the list, whichever is more efficient
@@ -289,6 +285,130 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 		}
 		return result;
 	}
+
+    private class DLLListIterator implements ListIterator<E>{
+        BidirectionalNode<E> current, next;
+        int nextIndex;
+        int interModCount;
+        boolean removeCalled, addCalled;
+
+        DLLListIterator(int index){
+            if(index == count){
+                next = null;
+            }
+            else{
+                next = getBidirectionalNode(index);
+            }
+            current = null;
+            nextIndex = index;
+            interModCount = modCount;
+            removeCalled = addCalled = false;
+
+        }
+
+        private void  checkForModification(){
+            if(interModCount != modCount){
+                throw new ConcurrentModificationException();
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            checkForModification();
+            return nextIndex < count;
+        }
+
+        @Override
+        public E next() {
+            checkForModification();
+            if(!hasNext()){
+                throw new NoSuchElementException();
+            }
+
+            current = next;
+            next = next.getNext();
+            nextIndex++;
+            removeCalled = addCalled = false;
+
+            return current.getElement();
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            checkForModification();
+            return nextIndex > 0;
+        }
+
+        @Override
+        public E previous() {
+            checkForModification();
+            if(!hasPrevious()){
+                throw new NoSuchElementException();
+            }
+
+            if(next == null){
+                current = next = rear;
+            }
+            else{
+                current = next = next.getPrevious();
+            }
+            nextIndex--;
+            removeCalled = addCalled = false;
+
+            return current.getElement();
+        }
+
+        @Override
+        public int nextIndex() {
+            checkForModification();
+            return nextIndex;
+        }
+
+        @Override
+        public int previousIndex() {
+            checkForModification();
+            return nextIndex - 1;
+        }
+
+        @Override
+        public void remove() {
+            checkForModification();
+            if(current == null || addCalled){
+                throw new IllegalStateException();
+            }
+
+            removeElement(current);
+            iterModCount++;
+            removeCalled = true;
+            current = null;
+        }
+
+        @Override
+        public void set(E e) {
+            checkForModification();
+            if(current == null || addCalled || removeCalled){
+                throw new IllegalStateException();
+            }
+            current.setElement(e);
+        }
+
+        @Override
+        public void add(E e) {
+            checkForModification();
+            if(next==null){
+                addToRear(e);
+                current = rear.getPrevious();
+            }
+            else{ 
+                next.setElement(e);
+                current = next.getPrevious();
+            }
+            
+            nextIndex++;
+            interModCount++;
+            addCalled = true;
+        } 
+    }
 
 	private class DLLIterator implements Iterator<E> {
 		private BidirectionalNode<E> previous;
@@ -348,4 +468,5 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 			canRemove = false; 
 		}
 	}
+
 }
