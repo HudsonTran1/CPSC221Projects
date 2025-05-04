@@ -379,6 +379,8 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
             checkForModification();
 			if(current == null) { throw new IllegalStateException(); }
             current.setElement(e);
+			modCount++;
+			iterModCount++;
         }
 
         @Override
@@ -446,12 +448,6 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 			iterModCount++;
 			canRemove = false; 
 		}
-	}
-
-	private enum ListIteratorState {
-		NONE,
-		PREVIOUS,
-		NEXT
 	}
 
 }
