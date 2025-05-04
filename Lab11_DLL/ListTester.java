@@ -274,28 +274,29 @@ public class ListTester {
 		if (SUPPORTS_LIST_ITERATOR) {
 			// Place List Iterator Scenarios Here...
 
+			// Scenario: 57
+			testSingleElementList(AB_listIter1NextRemove_A,"AB_listIter1NextRemove_A",LIST_A, STRING_A);
+
+			// Scenario: 60
+			testTwoElementList(ABC_listIter1NextRemove_AC, "ABC_listIter1NextRemove_AC", LIST_AC, STRING_AC);
 
 			// Scenario 66
-			testSingleElementList(A_iterNextPreviousRemove_A, "A_iterNextPreviousRemove_A", LIST_A, STRING_A);
+			testEmptyList(A_listIter1PreviousRemove_emptyList, "A_listIter1PreviousRemove_emptyList");
 
 			// Scenario 71
-			testTwoElementList(AB_iterNextPreviousRemove_BC, "AB_iterNextPreviousRemove_BC", LIST_BC, STRING_BC);
+			testTwoElementList(ABC_listIter2PreviousRemove_AC, "ABC_listIter2PreviousRemove_AC", LIST_AC, STRING_AC);
 
-			// Scenario 96
-			testThreeElementList(ABC_iterNextSetD_ABDC, "ABC_iterNextSetD_ABDC", LIST_ABDC, STRING_ABDC);
-
-			// Scenario 99
-			testThreeElementList(ABC_iterNextPreviousSetD_ABDC, "ABC_iterNextPreviousSetD_ABDC", LIST_ABDC, STRING_ABDC);
-
-				// Scenario: 57
-			testSingleElementList(AB_listIter1NextRemove_A,"AB_listIter1NextRemove_A",LIST_A, STRING_A);
-				// Scenario: 60
-			testTwoElementList(ABC_listIter1NextRemove_AC, "ABC_listIter1NextRemove_AC", LIST_AC, STRING_AC);
-				// Scenario: 87
+			// Scenario: 87
 			testThreeElementList(AB_listIter0NextAddC_ACB, "AB_listIter0NextAddC_ACB", LIST_ACB, STRING_ACB);
-				// Scenario: 90
+			
+			// Scenario: 90
 			testThreeElementList(AB_listIter2PreviousAddC_ACB, "AB_listIter2PreviousAddC_ACB", LIST_ACB, STRING_ACB);
 
+			// Scenario 96
+			testThreeElementList(ABC_listIter1NextSetD_ADC, "ABC_listIter1NextSetD_ADC", LIST_ADC, STRING_ADC);
+
+			// Scenario 99
+			testThreeElementList(ABC_listIter2PreviousSetD_ADC, "ABC_listIter2PreviousSetD_ADC", LIST_ADC, STRING_ADC);
 		}
 
 
@@ -349,19 +350,6 @@ public class ListTester {
 	//  struggling with it, just make sure each scenario building method has a corresponding Scenario 
 	//  assignment statement as in these examples.
 	private Scenario<Integer> newList = () -> newList();
-
-	// Scenario 66: A -> list-iterator(1), previous(), remove() -> [ ]
-	private Scenario<Integer> A_iterNextPreviousRemove_A = () -> A_iterNextPreviousRemove_A();
-
-	// Scenario 71: [A, B] -> list-iterator(1), previous(), remove() -> [B, C]
-	private Scenario<Integer> AB_iterNextPreviousRemove_BC = () -> AB_iterNextPreviousRemove_BC();
-
-	// Scenario 96: [A, B, C] -> list-iterator(1), next(), set(D) -> [A, D, C]
-	private Scenario<Integer> ABC_iterNextSetD_ABDC = () -> ABC_iterNextSetD_ABDC();
-
-	// Scenario 99: [A, B, C] -> list-iterator(2), previous(), set(D) -> [A, D, C]
-	private Scenario<Integer> ABC_iterNextPreviousSetD_ABDC = () -> ABC_iterNextPreviousSetD_ABDC();
-
 
 	/** Scenario #02: [] -> addToFront(A) -> [A] #6
 	 * @return [A] after addToFront(A)
@@ -772,54 +760,11 @@ public class ListTester {
 	}
 	private Scenario<Integer> ABC_iterNextRemoveNextRemoveNextRemove_EMPTY = () -> ABC_iterNextRemoveNextRemoveNextRemove_EMPTY();	
 
-
-	private IndexedUnsortedList<Integer> A_iterNextPreviousRemove_A() {
-		IndexedUnsortedList<Integer> list = new IUDoubleLinkedList<>();
-		list.add(ELEMENT_A); // [A]
-		ListIterator<Integer> itr = list.listIterator();
-		itr.next();
-		itr.previous();
-		itr.remove(); // []
-		return list;
-	}
-	
-	private IndexedUnsortedList<Integer> AB_iterNextPreviousRemove_BC() {
-		IndexedUnsortedList<Integer> list = new IUDoubleLinkedList<>();
-		list.add(ELEMENT_A); list.add(ELEMENT_B); // [A, B]
-		ListIterator<Integer> itr = list.listIterator();
-		itr.next();
-		itr.previous();
-		itr.remove(); // [B]
-		return list;
-	}
-	
-	private IndexedUnsortedList<Integer> ABC_iterNextSetD_ABDC() {
-		IndexedUnsortedList<Integer> list = new IUDoubleLinkedList<>();
-		list.add(ELEMENT_A); list.add(ELEMENT_B); list.add(ELEMENT_C); // [A, B, C]
-		ListIterator<Integer> itr = list.listIterator();
-		itr.next();
-		itr.set(ELEMENT_D); // [D, B, C]
-		return list;
-	}
-	
-	private IndexedUnsortedList<Integer> ABC_iterNextPreviousSetD_ABDC() {
-		IndexedUnsortedList<Integer> list = new IUDoubleLinkedList<>();
-		list.add(ELEMENT_A); list.add(ELEMENT_B); list.add(ELEMENT_C); // [A, B, C]
-		ListIterator<Integer> itr = list.listIterator();
-		itr.next();
-		itr.previous();
-		itr.set(ELEMENT_D); // [D, B, C]
-		return list;
-	}
-	
-
-
-
 	/** Scenario #57: [A,B] -> list-iterator(1), next(), remove() -> [A]
 	 * @return [A] after list-iterator(1), next(), remove()
 	 */
-	private IUDoubleLinkedList<Integer> AB_listIter1NextRemove_A() {
-		IUDoubleLinkedList<Integer> list = (IUDoubleLinkedList<Integer>) A_addToRearB_AB();
+	private IndexedUnsortedList<Integer> AB_listIter1NextRemove_A() {
+		IndexedUnsortedList<Integer> list = A_addToRearB_AB();
 		ListIterator<Integer> listIter = list.listIterator(1);
 		listIter.next();
 		listIter.remove();
@@ -827,26 +772,43 @@ public class ListTester {
 	}
 	private Scenario<Integer> AB_listIter1NextRemove_A = () -> AB_listIter1NextRemove_A();
 
-	
 	/** Scenario #60: [A,B,C] -> list-iterator(1), next(), remove() -> [A,C]
 	 * @return [A,C] after list-iterator(1), next(), remove()
 	 */
-	private IUDoubleLinkedList<Integer> ABC_listIter1NextRemove_AC() {
-		IUDoubleLinkedList<Integer> list = (IUDoubleLinkedList<Integer>) A_addToRearB_AB();
-		list.addToRear(ELEMENT_C);
+	private IndexedUnsortedList<Integer> ABC_listIter1NextRemove_AC() {
+		IndexedUnsortedList<Integer> list = AB_addAfterCB_ABC();
 		ListIterator<Integer> listIter = list.listIterator(1);
 		listIter.next();
 		listIter.remove();
 		return list;
 	}
 	private Scenario<Integer> ABC_listIter1NextRemove_AC = () -> ABC_listIter1NextRemove_AC();
+	
+	// Scenario 66
+	private IndexedUnsortedList<Integer> A_listIter1PreviousRemove_emptyList() {
+		IndexedUnsortedList<Integer> list = emptyList_addA_A();
+		ListIterator<Integer> itr = list.listIterator(1);
+		itr.previous();
+		itr.remove(); // []
+		return list;
+	}
+	private Scenario<Integer> A_listIter1PreviousRemove_emptyList = () -> A_listIter1PreviousRemove_emptyList();
 
+	// Scenario 71
+	private IndexedUnsortedList<Integer> ABC_listIter2PreviousRemove_AC() {
+		IndexedUnsortedList<Integer> list = AB_addAfterCB_ABC();
+		ListIterator<Integer> listIter = list.listIterator(2);
+		listIter.previous();
+		listIter.remove(); // [B]
+		return list;
+	}
+	private Scenario<Integer> ABC_listIter2PreviousRemove_AC = () -> ABC_listIter2PreviousRemove_AC();
 
 	/** Scenario #87: [A,B] -> list-iterator(0), next(), add(C) -> [A,C,B]
 	 * @return [A,C,B] after list-iterator(0), next(), add(C)
 	 */
-	private IUDoubleLinkedList<Integer> AB_listIter0NextAddC_ACB() {
-		IUDoubleLinkedList<Integer> list = (IUDoubleLinkedList<Integer>) A_addToRearB_AB();
+	private IndexedUnsortedList<Integer> AB_listIter0NextAddC_ACB() {
+		IndexedUnsortedList<Integer> list = A_addToRearB_AB();
 		ListIterator<Integer> listIter = list.listIterator(0);
 		listIter.next();
 		listIter.add(ELEMENT_C);
@@ -854,18 +816,62 @@ public class ListTester {
 	}
 	private Scenario<Integer> AB_listIter0NextAddC_ACB = () -> AB_listIter0NextAddC_ACB();
 
+	// Scenario 87
+	private IndexedUnsortedList<Integer> ABC_listIterNextSetD_ADC() {
+		IndexedUnsortedList<Integer> list = AB_addAfterCB_ABC();
+		ListIterator<Integer> listIter = list.listIterator(0);
+		listIter.next();
+		listIter.set(ELEMENT_D); // [D, B, C]
+		return list;
+	}
 	
 	/** Scenario #90: [A,B] -> list-iterator(2), previous(), add(C) -> [A,C,B]
 	 * @return [A,C,B] after list-iterator(2), previous(), add(C)
 	 */
-	private IUDoubleLinkedList<Integer> AB_listIter2PreviousAddC_ACB() {
-		IUDoubleLinkedList<Integer> list = (IUDoubleLinkedList<Integer>) A_addToRearB_AB();
+	private IndexedUnsortedList<Integer> AB_listIter2PreviousAddC_ACB() {
+		IndexedUnsortedList<Integer> list = A_addToRearB_AB();
 		ListIterator<Integer> listIter = list.listIterator(2);
 		listIter.previous();
 		listIter.add(ELEMENT_C);
 		return list;
 	}
 	private Scenario<Integer> AB_listIter2PreviousAddC_ACB = () -> AB_listIter2PreviousAddC_ACB();
+
+	// Scenario 96
+	private IndexedUnsortedList<Integer> ABC_listIter1NextSetD_ADC() {
+		IndexedUnsortedList<Integer> list = AB_addAfterCB_ABC();
+		ListIterator<Integer> listIter = list.listIterator(1);
+		listIter.next();
+		listIter.previous();
+		listIter.set(ELEMENT_D); // [D, B, C]
+		return list;
+	}
+	private Scenario<Integer> ABC_listIter1NextSetD_ADC = () -> ABC_listIter1NextSetD_ADC();
+
+	// Scenario 99
+	private IndexedUnsortedList<Integer> ABC_listIter2PreviousSetD_ADC() {
+		IndexedUnsortedList<Integer> list = AB_addAfterCB_ABC();
+		ListIterator<Integer> itr = list.listIterator(2);
+		itr.next();
+		itr.previous();
+		itr.set(ELEMENT_D); // [D, B, C]
+		return list;
+	}
+	private Scenario<Integer> ABC_listIter2PreviousSetD_ADC = () -> ABC_listIter2PreviousSetD_ADC();
+
+
+
+
+	
+
+	
+	
+
+
+	
+
+	
+	
 	
 	/////////////////////////////////
 	//XXX Tests for 0-element list
@@ -929,12 +935,6 @@ public class ListTester {
 				// printTest(scenarioName + "_testListIter0PreviousIndex", testListIterPreviousIndex(WrapIt.prep(scenario.build(), 0).getListIterator(), -1, Result.MatchingValue));
 				// printTest(scenarioName + "_testListIter0SetX", testListIterSet(WrapIt.prep(scenario.build(), 0).getListIterator(), ELEMENT_X, Result.IllegalState));
 				// printTest(scenarioName + "_testListIter0Remove", testListIterRemove(WrapIt.prep(scenario.build(), 0).getListIterator(), Result.IllegalState));
-				testEmptyList(A_iterNextPreviousRemove_A, "A_iterNextPreviousRemove_A");
-				testTwoElementList(AB_iterNextPreviousRemove_BC, "AB_iterNextPreviousRemove_BC", LIST_BC, STRING_BC);
-				testThreeElementList(ABC_iterNextSetD_ABDC, "ABC_iterNextSetD_ABDC", LIST_ABDC, STRING_ABDC);
-				testThreeElementList(ABC_iterNextPreviousSetD_ABDC, "ABC_iterNextPreviousSetD_ABDC", LIST_ABDC, STRING_ABDC);
-
-
 				printTest(scenarioName + "_testListIter", testListIter(scenario.build(), Result.NoException));
 				printTest(scenarioName + "_testListIterNextIndex", testListIterNextIndex(WrapIt.prep(scenario.build(), true).getListIterator(), 0, Result.MatchingValue));
 				printTest(scenarioName + "_testListIterPreviousIndex", testListIterPreviousIndex(WrapIt.prep(scenario.build(), true).getListIterator(), -1, Result.MatchingValue));
