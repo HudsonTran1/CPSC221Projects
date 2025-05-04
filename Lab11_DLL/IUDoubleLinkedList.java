@@ -242,25 +242,25 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
 		// logic to start at the beginning or end of the list, whichever is more efficient
         BidirectionalNode<E> current; // node to walk through the linked structure
        
-		if(index <= count/2) { // if index is close to the start            
-            current = front; // start at front
-            // bump current to the next node until index is reached
-            for (int i = 0; i < index; i++) {
-                current = current.getNext(); // bump to next node
-		    }
-        } else { // if index is not close to the start
-            current = rear; // start at rear
-            // bump current to the next node until index is reached
-            for (int i = count; i > index; i--) {
-                current = current.getPrevious(); // bump to next node
-		    }
-        }
+		// if(index <= count/2) { // if index is close to the start            
+        //     current = front; // start at front
+        //     // bump current to the next node until index is reached
+        //     for (int i = 0; i < index; i++) {
+        //         current = current.getNext(); // bump to next node
+		//     }
+        // } else { // if index is not close to the start
+        //     current = rear; // start at rear
+        //     // bump current to the next node until index is reached
+        //     for (int i = count; i > index; i--) {
+        //         current = current.getPrevious(); // bump to next node
+		//     }
+        // }
 		// Unused:
-		// current = front; // start at front
-		// // bump current to the next node until index is reached
-		// for (int i = 0; i < index; i++) {
-		// 	current = current.getNext(); // bump to next node
-		// }
+		current = front; // start at front
+		// bump current to the next node until index is reached
+		for (int i = 0; i < index; i++) {
+			current = current.getNext(); // bump to next node
+		}
 
 		return current; // return the node at the index
 	}
@@ -290,22 +290,18 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         BidirectionalNode<E> current, next;
         int nextIndex;
         int interModCount;
-        boolean removeCalled, addCalled;
-		ListIteratorState state = ListIteratorState.NONE;
+       // boolean removeCalled, addCalled;
+		boolean canRemove;
 
 		DLLListIterator(int index){
 			if(index < 0 || index > count) { throw new IndexOutOfBoundsException();}
-            if(index == count){
-                next = null;
-            }
-            else{
-                next = getBidirectionalNode(index);
-            }
+            
+			next = getBidirectionalNode(index);
             current = null;
             nextIndex = index;
             interModCount = modCount;
-            removeCalled = addCalled = false;
-
+          //  removeCalled = addCalled = true;
+			canRemove = false;
         }
 
         private void checkForModification(){
@@ -330,8 +326,8 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
             current = next;
             next = next.getNext();
             nextIndex++;
-            removeCalled = addCalled = false;
-
+//            removeCalled = addCalled = false;
+			canRemove = true;
             return current.getElement();
         }
 
@@ -348,15 +344,10 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
                 throw new NoSuchElementException();
             }
 
-            if(next == null){
-                current = next = rear;
-            }
-            else{
-          		current = next = next.getPrevious();
-            }
-			
+			current = next = getPreceding(next, nextIndex);
+
             nextIndex--;
-            removeCalled = false;
+            canRemove = true;
             return current.getElement();
         }
 
@@ -375,24 +366,19 @@ public class IUDoubleLinkedList<E> implements IndexedUnsortedList<E>{
         @Override
         public void remove() {
             checkForModification();
-            if(current == null || removeCalled){
+            if(!canRemove){
                 throw new IllegalStateException();
             }
 			removeElement(current);
-			current = null;
             iterModCount++;
-            removeCalled = true;
-            current = null;
+            canRemove = false;
         }
 
         @Override
         public void set(E e) {
             checkForModification();
-            if(current == null || removeCalled){
-                throw new IllegalStateException();
-            }
+			if(current == null) { throw new IllegalStateException(); }
             current.setElement(e);
-			current = null;
         }
 
         @Override

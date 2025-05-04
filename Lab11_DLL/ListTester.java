@@ -842,7 +842,6 @@ public class ListTester {
 		IndexedUnsortedList<Integer> list = AB_addAfterCB_ABC();
 		ListIterator<Integer> listIter = list.listIterator(1);
 		listIter.next();
-		listIter.previous();
 		listIter.set(ELEMENT_D); // [D, B, C]
 		return list;
 	}
@@ -852,7 +851,6 @@ public class ListTester {
 	private IndexedUnsortedList<Integer> ABC_listIter2PreviousSetD_ADC() {
 		IndexedUnsortedList<Integer> list = AB_addAfterCB_ABC();
 		ListIterator<Integer> itr = list.listIterator(2);
-		itr.next();
 		itr.previous();
 		itr.set(ELEMENT_D); // [D, B, C]
 		return list;
