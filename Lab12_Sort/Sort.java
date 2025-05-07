@@ -1,4 +1,5 @@
 import java.util.Comparator;
+import java.util.Iterator;
 
 /**
  * Class for sorting lists that implement the IndexedUnsortedList interface,
@@ -63,7 +64,42 @@ public class Sort {
 	 *            The list to be sorted, implements IndexedUnsortedList interface 
 	 */
 	private static <E extends Comparable<E>> void quicksort(IndexedUnsortedList<E> list) {
-		// TODO: Implement recursive quicksort algorithm 
+		if(list.size() <= 1) { return; } // base case: when the list is only one element long or shorter; no more sorting required
+		// create lists for left and right buckets
+		WrappedDLL<E> leftList = new WrappedDLL<>(); 
+		WrappedDLL<E> rightList = new WrappedDLL<>(); 
+
+		Iterator<E> itr = list.iterator(); // Iterator to move through the list
+		
+		// partition element
+		E partitionElement = itr.next(); // grab the partition element -- skip the first element for the loop later
+		itr.remove(); // remove the partiion from the list
+		// current element for iteration
+		E current;
+
+		// logic to toss all elements into left or right buckets (elements of same value as parititon placed in the right bucket)
+		while (itr.hasNext()) {
+			current = itr.next();
+			itr.remove();
+			if(partitionElement.compareTo(current) <= 0) { // if the element is bigger than or the same as the partition
+				rightList.addToRear(current); // add to right bucket
+			} else { // if the element is smaller than the partition
+				leftList.addToRear(current); // add to left bucket
+			}
+		}
+
+		// sort left and right lists
+		quicksort(leftList);
+		quicksort(rightList);
+
+		// splice left and right lists
+		for (E element : leftList) { // add all the elements in order from the left list to the original list
+			list.addToRear(element);
+		}
+		list.addToRear(partitionElement); // add the partition back at the end of the original list
+		for (E element : rightList) { // add all the elements in order from the right list to the orifinal list
+			list.addToRear(element);
+		}
 	}
 		
 	/**
@@ -80,8 +116,42 @@ public class Sort {
 	 *            The Comparator used
 	 */
 	private static <E> void quicksort(IndexedUnsortedList<E> list, Comparator<E> c) {
-		// TODO: Implement recursive quicksort algorithm using Comparator
+		if(list.size() <= 1) { return; } // base case: when the list is only one element long or shorter; no more sorting required
+		// create lists for left and right buckets
+		WrappedDLL<E> leftList = new WrappedDLL<>(); 
+		WrappedDLL<E> rightList = new WrappedDLL<>(); 
 
+		Iterator<E> itr = list.iterator(); // Iterator to move through the list
+		
+		// partition element
+		E partitionElement = itr.next(); // grab the partition element -- skip the first element for the loop later
+		itr.remove(); // remove the partiion from the list
+		// current element for iteration
+		E current;
+
+		// logic to toss all elements into left or right buckets (elements of same value as parititon placed in the right bucket)
+		while (itr.hasNext()) {
+			current = itr.next();
+			itr.remove();
+			if(c.compare(partitionElement, current) <= 0) { // if the element is bigger than or the same as the partition
+				rightList.addToRear(current); // add to right bucket
+			} else { // if the element is smaller than the partition
+				leftList.addToRear(current); // add to left bucket
+			}
+		}
+
+		// sort left and right lists
+		quicksort(leftList, c);
+		quicksort(rightList, c);
+
+		// splice left and right lists
+		for (E element : leftList) { // add all the elements in order from the left list to the original list
+			list.addToRear(element);
+		}
+		list.addToRear(partitionElement); // add the partition back at the end of the original list
+		for (E element : rightList) { // add all the elements in order from the right list to the orifinal list
+			list.addToRear(element);
+		}
 	}
 	
 }
