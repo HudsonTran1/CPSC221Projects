@@ -69,18 +69,15 @@ public class Sort {
 		WrappedDLL<E> leftList = new WrappedDLL<>(); 
 		WrappedDLL<E> rightList = new WrappedDLL<>(); 
 
-		Iterator<E> itr = list.iterator(); // Iterator to move through the list
-		
 		// partition element
-		E partitionElement = itr.next(); // grab the partition element -- skip the first element for the loop later
-		itr.remove(); // remove the partiion from the list
+		E partitionElement = list.removeFirst(); // grab and remove the partition element -- skip the first element for the loop later
+
 		// current element for iteration
 		E current;
 
 		// logic to toss all elements into left or right buckets (elements of same value as parititon placed in the right bucket)
-		while (itr.hasNext()) {
-			current = itr.next();
-			itr.remove();
+		while (list.size() > 0) {
+			current = list.removeFirst();
 			if(partitionElement.compareTo(current) <= 0) { // if the element is bigger than or the same as the partition
 				rightList.addToRear(current); // add to right bucket
 			} else { // if the element is smaller than the partition
@@ -121,18 +118,15 @@ public class Sort {
 		WrappedDLL<E> leftList = new WrappedDLL<>(); 
 		WrappedDLL<E> rightList = new WrappedDLL<>(); 
 
-		Iterator<E> itr = list.iterator(); // Iterator to move through the list
-		
 		// partition element
-		E partitionElement = itr.next(); // grab the partition element -- skip the first element for the loop later
-		itr.remove(); // remove the partiion from the list
+		E partitionElement = list.removeFirst(); // grab and remove the partition element -- skip the first element for the loop later
+
 		// current element for iteration
 		E current;
 
 		// logic to toss all elements into left or right buckets (elements of same value as parititon placed in the right bucket)
-		while (itr.hasNext()) {
-			current = itr.next();
-			itr.remove();
+		while (list.size() > 0) {
+			current = list.removeFirst();
 			if(c.compare(partitionElement, current) <= 0) { // if the element is bigger than or the same as the partition
 				rightList.addToRear(current); // add to right bucket
 			} else { // if the element is smaller than the partition
