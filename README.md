@@ -1,4 +1,4 @@
-# CPSC221Labs
+# CPSC221Projects
 
 This is a repository containing group projects from Computer Science II (CPSC221) at College of Western Idaho
 
