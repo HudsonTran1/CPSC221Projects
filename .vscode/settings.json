@@ -2,5 +2,10 @@
     "java.project.sourcePaths": [
         "Lab12_Sort"
     ],
-    "java.project.referencedLibraries": []
+    "java.project.referencedLibraries": [],
+    "githubPullRequests.remotes": [
+        "origin",
+        "upstream",
+        "CPSC221Projects"
+    ]
 }
